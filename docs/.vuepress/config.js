@@ -20,6 +20,14 @@ module.exports = {
                 link: "/starter-guide.html",
             },
             {
+                text: "References",
+                children: [
+                    "/core-concepts.html",
+                    "/core-services.html",
+                    "/routing.html",
+                ],
+            },
+            {
                 text: "Middleware",
                 link: "/middleware/",
             },
