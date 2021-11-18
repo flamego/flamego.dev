@@ -1,3 +1,9 @@
+---
+next:
+  text: Starter guide
+  link: starter-guide.md
+---
+
 ![Flamego](https://github.com/flamego/brand-kit/raw/main/banner/banner-01.jpg)
 
 Flamego is a fantastic modular Go web framework boiled with dependency injection.
@@ -8,11 +14,13 @@ It is the successor of the [Macaron](https://github.com/go-macaron/macaron), and
 
 The minimum requirement of Go is **1.16**.
 
-	go get github.com/flamego/flamego
+```:no-line-numbers
+go get github.com/flamego/flamego
+```
 
 ## Getting started
 
-```go
+```go:no-line-numbers
 package main
 
 import "github.com/flamego/flamego"
@@ -34,4 +42,9 @@ func main() {
 - Integrate with any existing Go web application non-intrusively.
 - Dependency injection via function signature to write testable and maintainable code.
 
-_Stay tuned!_
+## Exploring more
+
+- New to Flamego? Check out the [Starter guide](starter-guide.md)!
+- Look up [Middleware](middleware/README.md) that are built for Flamego.
+- Have any questions? Answers may be found in our [FAQs](faqs.md).
+- Please [file an issue](https://github.com/flamego/flamego/issues) or [start a discussion](https://github.com/flamego/flamego/discussions) if you want to reach out.
