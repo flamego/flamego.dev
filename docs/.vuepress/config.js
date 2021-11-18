@@ -31,5 +31,6 @@ module.exports = {
         docsDir: "docs",
         lastUpdated: true,
         lastUpdatedText: "Last updated",
+        contributors: false,
     },
 };
