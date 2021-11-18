@@ -107,7 +107,7 @@ $ go run main.go
 
   </CodeGroupItem>
 
-  <CodeGroupItem title="Test" active>
+  <CodeGroupItem title="Test">
 
 ```:no-line-numbers
 $ curl http://localhost:2830
@@ -138,3 +138,18 @@ Try using the notation `{**: **}`, then redo all test requests and see what chan
 
 On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe), which is the most common way to start a web server in Go, and maybe more familiar to you if you have used other Go web frameworks. This is possible with Flamego because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface. Therefore, a Flame instance can be plugged into anywhere that accepts a `http.Handler`, and is particularly useful when you want to progressively migrate an existing Go web application to use Flamego.
 
+On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flaemgo.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
+
+::: tip 💡 Did you know?
+You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but an empty interface (`interface{}`).
+
+So how does the Flame instance determine what to pass down to its handlers at runtime?
+
+This is the beauty (or confusion? 😅) of the [service injection](core-concepts.md#service-injection), and [`flamego.Context`](core-services#context) is one of the default services that are injected into every request.
+:::
+
+## Wrapping up
+
+At this point, you should have some basic understanding of what is Flamego and how to start using it in your Go web applications.
+
+Starting a new journey is never easy, especially when there are a lot of new concepts and content to learn. Please don't be hesitate reaching out for help and have a nice day!
