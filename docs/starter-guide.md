@@ -7,7 +7,7 @@ next:
 # Starter guide
 
 ::: warning
-This guide is not intended to teach you how to use [Go](https://golang.org), and would assume you already have basic knowledge about HTTP, web applications and programming in Go.
+This guide is not intended to teach you how to use [Go](https://golang.org), and would assume you already have basic knowledge about HTTP, web applications development and programming in Go.
 :::
 
 Let's start with the minimal example you may have seen on the front page:
@@ -28,7 +28,7 @@ func main() {
 
 On line 6, the function [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) creates and returns a [classic Flame instance](core-concepts.md#classic-flame) with a default list of middleware, including [`flamego.Logger`](core-services.md#routing-logger), [`flamego.Recovery`](core-services.md#panic-recovery) and [`flamego.Static`](core-services.md#serving-static-files).
 
-On line 7, the method [`f.Get`](https://pkg.go.dev/github.com/flamego/flamego#Router) registers the anonymous function (line 7 to 9) to be the [Handler](core-concepts.md#handlers) of the root path ("/") when a HTTP GET request comes in. In this case, the handler simply reponds a "Hello world!" string to the client.
+On line 7, the method [`f.Get`](https://pkg.go.dev/github.com/flamego/flamego#Router) registers the anonymous function (line 7 to 9) to be the [handler](core-concepts.md#handlers) of the root path ("/") when a HTTP GET request comes in. In this case, the handler simply reponds a "Hello, Flamego!" string to the client.
 
 On line 10, we start the web server by calling [`f.Run`](https://pkg.go.dev/github.com/flamego/flamego#Flame.Run). By default, the [Flame instance](core-concepts.md#instances) listens on the address `0.0.0.0:2830`.
 
@@ -51,10 +51,17 @@ $ go run main.go
 
 Once you see the last line from your terminal, you're good to go!
 
-You may verify the result by either visiting [http://localhost:2830](http://localhost:2830) in your browser, or through the folllowing `curl` command:
+You may verify the result by either visiting [http://localhost:2830](http://localhost:2830) ([why 2830?](faqs.md#why-the-default-port-is-2830)) in your browser, or through the folllowing `curl` command:
 
 ```:no-line-numbers
 $ curl http://localhost:2830
 Hello, Flamego!
 ```
+
+::: tip 💡 Did you know?
+
+If you have used other Go web frameworks like [Gin](https://github.com/gin-gonic/gin) or [Echo](https://echo.labstack.com/), you may be surpised that you can directly return a string in Flamego handlers as the response body to the client.
+
+That is exactly right! Of course, this won't be the only way to make a response body (which would be a very unfriendly design!). If you're interested in reading more, the [return values](core-concepts.md#return-values) is the magician behind the scene.
+:::
 
