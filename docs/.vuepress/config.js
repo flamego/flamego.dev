@@ -17,7 +17,15 @@ module.exports = {
         navbar: [
             {
                 text: "Starter guide",
-                link: "/starter-guide/",
+                link: "/starter-guide.html",
+            },
+            {
+                text: "Middleware",
+                link: "/middleware/",
+            },
+            {
+                text: "FAQs",
+                link: "/faqs.html",
             },
         ],
         logo: "/favicon.png",
