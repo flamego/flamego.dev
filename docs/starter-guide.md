@@ -1,4 +1,5 @@
 ---
+sidebar: false
 next:
   text: Core concepts
   link: core-concepts.md

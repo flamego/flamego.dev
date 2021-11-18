@@ -1,4 +1,5 @@
 ---
+sidebar: false
 next:
   text: Starter guide
   link: starter-guide.md

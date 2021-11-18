@@ -39,7 +39,6 @@ module.exports = {
         logo: "/favicon.png",
         repo: "flamego/flamego",
         repoLabel: "GitHub",
-        sidebar: {},
         editLinks: true,
         editLinkText: "Edit this page on GitHub",
         docsRepo: "flamego/flamego.dev",
