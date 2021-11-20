@@ -196,11 +196,13 @@ As you can see, if an error is returned, the Flame instance automatically sets t
 Try returning `nil` for the error on line 18, then redo the test request and see what changes.
 :::
 
+### Return with a status code
+
 In the cases that you want to have complete control over the status code of your handlers, that is also possible!
 
 :::: code-group
 ::: code-group-item Code
-```go
+```go:no-line-numbers
 package main
 
 import (
@@ -250,4 +252,56 @@ Return an error
 ::::
 
 ![How cool is that?](https://media0.giphy.com/media/hS4Dz87diTpnDXf98E/giphy.gif?cid=ecf05e47go1oiqgxj1ro7e3t1usexogh109gigssvhxlp93a&rid=giphy.gif&ct=g)
+
+## Service injection
+
+Flamego is claimed to be boiled with [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) because of the service injection, it is the soul of the framework. The Flame instance uses the [`inject.Injector`](https://pkg.go.dev/github.com/flamego/flamego/inject#Injector) to manage injected services and resolves dependencies of a handler's argument list at the time of the handler invocation.
+
+Both dependency injection and service injection are very abstract concepts, so it is much easier to explain with examples:
+
+```go:no-line-numbers
+// Both `http.ResponseWriter` and `*http.Request` are injected,
+// so they can be used as handler arguments.
+f.Get("/", func(w http.ResponseWriter, r *http.Request) { ... })
+
+// The `flamego.Context` is probably the most frequently used
+// service in your web applications.
+f.Get("/", func(c flamego.Context) { ... })
+```
+
+What happens if you try to use a service that hasn't been injected?
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/flamego"
+)
+
+type myService struct{}
+
+func main() {
+	f := flamego.New()
+	f.Get("/", func(s myService) {})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+http: panic serving 127.0.0.1:50061: unable to invoke the 0th handler [func(main.myService)]: value not found for type main.myService
+...
+```
+:::
+::::
+
+### Builtin services
+
+There are services that are always injected thus available to every handler, including [`*log.Logger`](https://pkg.go.dev/log#Logger), [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context), [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) and [`*http.Request`](https://pkg.go.dev/net/http#Request).
+
+::: tip
+If you're interested in learning how exactly the service injection works in Flamego, the [custom services](custom-services.md) has the best resources you would want.
+:::
 

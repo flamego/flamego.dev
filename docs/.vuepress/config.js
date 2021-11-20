@@ -24,6 +24,7 @@ module.exports = {
                 children: [
                     "/core-concepts.html",
                     "/core-services.html",
+                    "/custom-services.html",
                     "/routing.html",
                 ],
             },
