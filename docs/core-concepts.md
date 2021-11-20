@@ -128,3 +128,126 @@ Respond from a method of a type
 :::
 ::::
 
+## Return values
+
+Generally, your web application needs to write content directly to the [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) (which you can retrieve using `ResponseWriter` method of [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context)). In some web frameworks, they offer returning an extra `error` as the indication of the server error as follows:
+
+```go:no-line-numbers
+func handler(w http.ResponseWriter, r *http.Request) error
+```
+
+However, you are still being limited to a designated list of return values from your handlers. In contrast, Flamego provides the flexibility of having different lists of return values from handlers based on your needs case by case, whether it's an error, a string, or just a status code.
+
+Let's see some examples that you can use for your handlers:
+
+:::: code-group
+::: code-group-item Code
+```go
+package main
+
+import (
+	"errors"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/string", func() string {
+		return "Return a string"
+	})
+	f.Get("/bytes", func() []byte {
+		return []byte("Return some bytes")
+	})
+	f.Get("/error", func() error {
+		return errors.New("Return an error")
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl -i http://localhost:2830/string
+HTTP/1.1 200 OK
+...
+
+Return a string
+
+$ curl -i http://localhost:2830/bytes
+HTTP/1.1 200 OK
+...
+
+Return some bytes
+
+$ curl -i http://localhost:2830/error
+HTTP/1.1 500 Internal Server Error
+...
+
+Return an error
+...
+```
+:::
+::::
+
+As you can see, if an error is returned, the Flame instance automatically sets the HTTP status code to be 500.
+
+::: tip
+Try returning `nil` for the error on line 18, then redo the test request and see what changes.
+:::
+
+In the cases that you want to have complete control over the status code of your handlers, that is also possible!
+
+:::: code-group
+::: code-group-item Code
+```go
+package main
+
+import (
+	"errors"
+	"net/http"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/string", func() (int, string) {
+		return http.StatusOK, "Return a string"
+	})
+	f.Get("/bytes", func() (int, []byte) {
+		return http.StatusOK, []byte("Return some bytes")
+	})
+	f.Get("/error", func() (int, error) {
+		return http.StatusForbidden, errors.New("Return an error")
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl -i http://localhost:2830/string
+HTTP/1.1 200 OK
+...
+
+Return a string
+
+$ curl -i http://localhost:2830/bytes
+HTTP/1.1 200 OK
+...
+
+Return some bytes
+
+$ curl -i http://localhost:2830/error
+HTTP/1.1 403 Forbidden
+...
+
+Return an error
+...
+```
+:::
+::::
+
+![How cool is that?](https://media0.giphy.com/media/hS4Dz87diTpnDXf98E/giphy.gif?cid=ecf05e47go1oiqgxj1ro7e3t1usexogh109gigssvhxlp93a&rid=giphy.gif&ct=g)
+
