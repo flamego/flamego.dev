@@ -98,18 +98,14 @@ As you may have guessed, this program responds back the request path that the cl
 
 Take a look!
 
-<CodeGroup>
-  <CodeGroupItem title="Run">
-
+:::: code-group
+::: code-group-item Run
 ```:no-line-numbers
 $ go run main.go
 2021/11/18 14:00:03 Server is running...
 ```
-
-  </CodeGroupItem>
-
-  <CodeGroupItem title="Test">
-
+:::
+::: code-group-item Test
 ```:no-line-numbers
 $ curl http://localhost:2830
 The request path is: /
@@ -123,9 +119,8 @@ The request path is: /never-mind
 $ curl http://localhost:2830/bad-ass/who-am-i
 404 page not found
 ```
-
-  </CodeGroupItem>
-</CodeGroup>
+:::
+::::
 
 So what are different now?
 
@@ -142,7 +137,7 @@ On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https
 On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flaemgo.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
 
 ::: tip 💡 Did you know?
-You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but an empty interface (`interface{}`).
+You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but [an empty interface (`interface{}`)](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17).
 
 So how does the Flame instance determine what to pass down to its handlers at runtime?
 
