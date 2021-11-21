@@ -9,3 +9,24 @@ next:
 
 # Core services
 
+## Context
+
+### Next
+
+### Remote address
+
+### Redirect
+
+### URL parameters
+
+## Default logger
+
+## Response stream
+
+## Request object
+
+## Routing logger
+
+## Panic recovery
+
+## Serving static files

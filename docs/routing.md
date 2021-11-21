@@ -8,3 +8,7 @@ next:
 ---
 
 # Routing
+
+## Constructing URL path
+
+## Getting bind parameters

@@ -335,7 +335,7 @@ Please be noted that middleware are always invoked first when a route is matched
 
 ## Env
 
-Flamego environment provides the ability to control behaviors of middleware and handlers based on the running environment of your web application. It is defined as the type [`EnvType`](https://pkg.go.dev/github.com/flamego/flamego#EnvType) and has some pre-defined values, including `flamego.EnvTypeDev`, `flamego.EnvTypeProd` and `flamego.EnvTypeTest`, which is for indicating development, production and testing environment resptively.
+Flamego environment provides the ability to control behaviors of middleware and handlers based on the running environment of your web application. It is defined as the type [`EnvType`](https://pkg.go.dev/github.com/flamego/flamego#EnvType) and has some pre-defined values, including `flamego.EnvTypeDev`, `flamego.EnvTypeProd` and `flamego.EnvTypeTest`, which is for indicating development, production and testing environment respectively.
 
 For example, the [template](https://github.com/flamego/template) middleware [rebuilds template files for every request when in `flamego.EnvTypeDev`](https://github.com/flamego/template/blob/ced6948bfc8cb49e32412380e407cbbe01485937/template.go#L229-L241), but caches the template files otherwise.
 
