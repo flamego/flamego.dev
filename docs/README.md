@@ -50,3 +50,4 @@ func main() {
 - Have any questions? Answers may be found in our [FAQs](faqs.md).
 - Please [file an issue](https://github.com/flamego/flamego/issues) or [start a discussion](https://github.com/flamego/flamego/discussions) if you want to reach out.
 - Follow our [Twitter](https://twitter.com/flamego_dev) to stay up to the latest news.
+- Our [brand kit](https://github.com/flamego/brand-kit) is also available on GitHub!

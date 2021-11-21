@@ -305,3 +305,46 @@ There are services that are always injected thus available to every handler, inc
 If you're interested in learning how exactly the service injection works in Flamego, the [custom services](custom-services.md) has the best resources you would want.
 :::
 
+## Middleware
+
+Middleware are the special kind of handlers that are designed as reusable components, and often accepting configurable options. There is no difference between middleware and handlers from compiler's point of view.
+
+Technically speaking, you may use the term middleware and handlers interchangably but the common sense would be that middleware are providing some services, either by [injecting to the context](https://github.com/flamego/session/blob/f8f1e1893ea6c15f071dd53aefd9494d41ce9e48/session.go#L183-L184) or [intercepting the request](https://github.com/flamego/auth/blob/dbec68df251ff382e908eb5659453d4918a042aa/basic.go#L38-L42), or both. On the other hand, handlers are mainly focusing on the business logic that is unique to your web application and the route that handlers are registered with.
+
+::: tip 💡 Did you know?
+Middleware can be used at anywhere that a `flamego.Handler` is accepted, including at global, group and route level.
+
+```go
+// Global middleware that are invoked before all other handlers.
+f.Use(middleware1, middleware2, middleware3)
+
+// Group middleware that are scoped down to a group of routes.
+f.Group("/",
+	func() {
+		f.Get("/hello", func() { ... })
+	},
+	middleware4, middleware5, middleware6,
+)
+
+// Route middleware that are scoped down to a single route.
+f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
+```
+
+Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
+:::
+
+## Env
+
+Flamego environment provides the ability to control behaviors of middleware and handlers based on the running environment of your web application. It is defined as the type [`EnvType`](https://pkg.go.dev/github.com/flamego/flamego#EnvType) and has some pre-defined values, including `flamego.EnvTypeDev`, `flamego.EnvTypeProd` and `flamego.EnvTypeTest`, which is for indicating development, production and testing environment resptively.
+
+For example, the [template](https://github.com/flamego/template) middleware [rebuilds template files for every request when in `flamego.EnvTypeDev`](https://github.com/flamego/template/blob/ced6948bfc8cb49e32412380e407cbbe01485937/template.go#L229-L241), but caches the template files otherwise.
+
+The Flamego environment is typically configured via the environment variable `FLAMEGO_ENV`:
+
+```sh:no-line-numbers
+export FLAMEGO_ENV=development
+export FLAMEGO_ENV=production
+export FLAMEGO_ENV=test
+```
+
+In case you want to retrieve or alter the environment in your web application, [`Env`](https://pkg.go.dev/github.com/flamego/flamego#Env) and [`SetEnv`](https://pkg.go.dev/github.com/flamego/flamego#SetEnv) methods are also available, and both of them are safe to be used concurrently.
