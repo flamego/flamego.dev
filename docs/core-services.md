@@ -514,4 +514,73 @@ The value of `Prefix` does not have to be the same as the value of `Directory`.
 
 ### Example: Serving the `embed.FS`
 
-TODO
+In this example, we're going to serve static resources from the [`embed.FS`](https://pkg.go.dev/embed#FS) that was [introduced in Go 1.16](https://blog.jetbrains.com/go/2021/06/09/how-to-use-go-embed-in-go-1-16/).
+
+Here is the setup for the example:
+
+:::: code-group
+::: code-group-item Directory
+```:no-line-numbers
+tree .
+.
+├── css
+│   └── main.css
+├── go.mod
+├── go.sum
+└── main.go
+
+1 directory, 4 files
+```
+:::
+::: code-group-item css/main.css
+```css:no-line-numbers
+html {
+    color: red;
+}
+```
+:::
+::: code-group-item main.go
+```go:no-line-numbers
+package main
+
+import (
+	"embed"
+	"net/http"
+
+	"github.com/flamego/flamego"
+)
+
+//go:embed css
+var css embed.FS
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Static(
+		flamego.StaticOptions{
+			FileSystem: http.FS(css),
+		},
+	))
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830/css/main.css
+html {
+    color: red;
+}
+```
+:::
+::::
+
+::: warning
+Because the Go embed encodes the entire path (i.e. including parent directories), the client have to use the full path, which is different from serving static files directly from the local disk.
+
+In other words, the following command will not work for the example:
+
+```:no-line-numbers
+$ curl http://localhost:2830/main.css
+404 page not found
+```
+:::
