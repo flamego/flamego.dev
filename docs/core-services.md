@@ -334,31 +334,41 @@ When you run the above program and do `curl http://localhost:2830/`, the followi
 ```
 
 ::: tip
-This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
-
-```go:no-line-numbers
-f.Use(
-    Logger(),
-    ...
-)
-```
+This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
 :::
 
 ## Panic recovery
 
-::: tip
-This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
+The [`flamego.Recovery`](https://pkg.go.dev/github.com/flamego/flamego#Recovery) is the middleware that is for recovering from panic:
 
 ```go:no-line-numbers
-f.Use(
-    ...
-    Recovery(),
-    ...
+package main
+
+import (
+	"github.com/flamego/flamego"
 )
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Recovery())
+	f.Get("/", func() {
+		panic("I can't breath")
+	})
+	f.Run()
+}
 ```
+
+When you run the above program and visit [http://localhost:2830/](http://localhost:2830/), the recovered page is displayed:
+
+![panic recovery](imgs/panic-recovery.png)
+
+::: tip
+This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
 :::
 
 ## Serving static files
+
+TODO
 
 ::: tip
 This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
