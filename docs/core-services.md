@@ -273,7 +273,7 @@ f.Get(..., func(c flamego.Context) {
 ```
 
 ::: tip 💡 Did you know?
-Not all handlers that are registered for a route are always being called, the request context (`flamego.Context`) stops invoking subsequent handlers [when the response status code has been written](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202) by the current handler. This is similar to how the [short circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation) works.
+Not all handlers that are registered for a route are always being invoked, the request context (`flamego.Context`) stops invoking subsequent handlers [when the response status code has been written](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202) by the current handler. This is similar to how the [short circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation) works.
 :::
 
 ## Request object
@@ -306,6 +306,71 @@ f.Get(..., func(c flamego.Context) {
 
 ## Routing logger
 
+The [`flamego.Logger`](https://pkg.go.dev/github.com/flamego/flamego#Logger) is the middleware that provides logging of requested routes and corresponding status code:
+
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Logger())
+	f.Get("/", func() (int, error) {
+		return http.StatusOK, nil
+	})
+	f.Run()
+}
+```
+
+When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
+
+```:no-line-numbers
+[Flamego] Listening on 0.0.0.0:2830 (development)
+[Flamego] ...: Started GET / for 127.0.0.1
+[Flamego] ...: Completed GET / 200 OK in 165.791µs
+```
+
+::: tip
+This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
+
+```go:no-line-numbers
+f.Use(
+    Logger(),
+    ...
+)
+```
+:::
+
 ## Panic recovery
 
+::: tip
+This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
+
+```go:no-line-numbers
+f.Use(
+    ...
+    Recovery(),
+    ...
+)
+```
+:::
+
 ## Serving static files
+
+::: tip
+This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
+
+```go:no-line-numbers
+f.Use(
+    ...
+    Static(
+        StaticOptions{
+            Directory: "public",
+        },
+    ),
+)
+```
+:::
