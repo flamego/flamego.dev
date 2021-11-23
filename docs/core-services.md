@@ -151,11 +151,68 @@ Please make sure to always first validating the user input!
 
 ### URL parameters
 
+[URL parameters](https://www.semrush.com/blog/url-parameters/), also known as "URL query parameters", or "URL query strings", are commonly used to pass arguments to the backend for all HTTP methods (POST forms have to be sent with POST method, as the counterpart).
+
+The `Query` method is built as a helper for accessing the URL parameters, and return an empty string if no such parameter found with the given key:
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/", func(c flamego.Context) string {
+		return "The name is " + c.Query("name")
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830?name=joe
+The name is joe
+
+$ curl http://localhost:2830
+The name is
+```
+:::
+::::
+
+There is a family of `Query` methods available at your fingertips, including:
+
+- `QueryTrim` trims spaces and returns value.
+- `QueryStrings` returns a list of strings.
+- `QueryUnescape` returns unescaped query result.
+- `QueryBool` returns value parsed as bool.
+- `QueryInt` returns value parsed as int.
+- `QueryInt` returns value parsed as int64.
+- `QueryFloat64` returns value parsed as float64.
+
+::: tip
+If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
+
+```go:no-line-numbers
+vals := c.Request().URL.Query()
+```
+:::
+
 ### Is `flamego.Context` a replacement to `context.Context`?
+
+No.
 
 ## Default logger
 
 ## Response stream
+
+::: tip
+TODO When do Flame instances stop invoking subsequent handlers.
+:::
 
 ## Request object
 
