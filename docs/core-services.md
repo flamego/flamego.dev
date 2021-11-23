@@ -306,6 +306,10 @@ f.Get(..., func(c flamego.Context) {
 
 ## Routing logger
 
+::: tip
+This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
+:::
+
 The [`flamego.Logger`](https://pkg.go.dev/github.com/flamego/flamego#Logger) is the middleware that provides logging of requested routes and corresponding status code:
 
 ```go:no-line-numbers
@@ -333,11 +337,11 @@ When you run the above program and do `curl http://localhost:2830/`, the followi
 [Flamego] ...: Completed GET / 200 OK in 165.791µs
 ```
 
+## Panic recovery
+
 ::: tip
 This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
 :::
-
-## Panic recovery
 
 The [`flamego.Recovery`](https://pkg.go.dev/github.com/flamego/flamego#Recovery) is the middleware that is for recovering from panic:
 
@@ -362,25 +366,152 @@ When you run the above program and visit [http://localhost:2830/](http://localho
 
 ![panic recovery](imgs/panic-recovery.png)
 
+## Serving static files
+
 ::: tip
 This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
 :::
 
-## Serving static files
-
-TODO
-
-::: tip
-This middleware is automatically registered as follows when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance:
+The [`flamego.Static`](https://pkg.go.dev/github.com/flamego/flamego#Static) is the middleware that is for serving static files, and it accepts an optional [`flamego.StaticOptions`](https://pkg.go.dev/github.com/flamego/flamego#StaticOptions):
 
 ```go:no-line-numbers
-f.Use(
-    ...
-    Static(
-        StaticOptions{
-            Directory: "public",
-        },
-    ),
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Static(
+		flamego.StaticOptions{
+			Directory: "public",
+		},
+	))
+	f.Run()
+}
+```
+
+You may also omit passing the options for using all default values:
+
+```go:no-line-numbers
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Static())
+	f.Run()
+}
+```
+
+### Example: Serving the source file
+
+In this example, we're going to treat our source code file as the static resources:
+
+```go{11-12}
+package main
+
+import (
+	"github.com/flamego/flamego"
 )
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Static(
+		flamego.StaticOptions{
+			Directory: "./",
+			Index:     "main.go",
+		},
+	))
+	f.Run()
+}
+```
+
+On line 11, we changed the `Directory` to be the working directory (`"./"`) instead of the default value `"public"`.
+
+On line 12, we changed the index file (the file to be served when listing a directory) to be `main.go` instead of the default value `"index.html"`.
+
+When you save the above program as `main.go` and run it, both `curl http://localhost:2830/` and `curl http://localhost:2830/main.go` will response the content of this `main.go` back to you.
+
+
+### Example: Serving multiple directories
+
+In this example, we're going to serve static resources for two different directories.
+
+Here is the setup for the example:
+
+:::: code-group
+::: code-group-item Directory
+```:no-line-numbers
+$ tree .
+.
+├── css
+│   └── main.css
+├── go.mod
+├── go.sum
+├── js
+│   └── main.js
+└── main.go
+
+2 directories, 5 files
 ```
 :::
+::: code-group-item css/main.css
+```css:no-line-numbers
+html {
+    color: red;
+}
+```
+:::
+::: code-group-item js/main.js
+```js:no-line-numbers
+console.log("Hello, Flamego!");
+```
+:::
+::: code-group-item main.go
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Static(
+		flamego.StaticOptions{
+			Directory: "js",
+		},
+	))
+	f.Use(flamego.Static(
+		flamego.StaticOptions{
+			Directory: "css",
+		},
+	))
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830/main.css
+html {
+    color: red;
+}
+
+$ curl http://localhost:2830/main.js
+console.log("Hello, Flamego!");
+```
+:::
+::::
+
+You may have noticed that the client should not include the value of `Directory`, which are `"css"` and `"js"` in the example. If you would like the client to include these values, you can use the `Prefix` option:
+
+```go:no-line-numbers{4}
+f.Use(flamego.Static(
+    flamego.StaticOptions{
+        Directory: "css",
+        Prefix:    "css",
+    },
+))
+```
+
+::: tip 💡 Did you know?
+The value of `Prefix` does not have to be the same as the value of `Directory`.
+:::
+
+### Example: Serving the `embed.FS`
+
+TODO
