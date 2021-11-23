@@ -246,7 +246,7 @@ func main() {
 }
 ```
 
-When you run the above program and do curl http://localhost:2830/, the following logs are printed to your terminal:
+When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
 
 ```:no-line-numbers
 [Flamego] Listening on 0.0.0.0:2830 (development)
@@ -277,6 +277,32 @@ Not all handlers that are registered for a route are always being called, the re
 :::
 
 ## Request object
+
+The request object is represented by the type [`*http.Request`](https://pkg.go.dev/net/http#Request), you may use it as an argument of your handlers or through the `Request().Request` field of the `flamego.Context`:
+
+```go:no-line-numbers
+f.Get(..., func(r *http.Request) {
+    ...
+})
+
+// or
+
+f.Get(..., func(c flamego.Context) {
+    r := c.Request().Request
+    ...
+})
+```
+
+You may wonder what does `c.Request()` return in the above example?
+
+Good catch! It returns a thin wrapper of the `*http.Request` and has the type [`*flamego.Request`](https://pkg.go.dev/github.com/flamego/flamego#Request), which provides helpers to read the request body:
+
+```go:no-line-numbers
+f.Get(..., func(c flamego.Context) {
+    body := c.Request().Body().Bytes()
+    ...
+})
+```
 
 ## Routing logger
 
