@@ -9,7 +9,7 @@ next:
 
 # Core services
 
-To accelerate your development, Flamego provides some core services that are essential to almost all web applications. However, you are not required to use all of them. The design principle of Flamego is always building the minimal core and pluggable addons at your own choice.
+ To get you off the ground, Flamego provides some core services that are essential to almost all web applications. However, you are not required to use all of them. The design principle of Flamego is always building the minimal core and pluggable addons at your own choice.
 
 ## Context
 
@@ -67,7 +67,7 @@ executing the second handler
 exiting the first handler
 ```
 
-In fact, the [routing logger](#routing-logger) is taking advantage of this feature to [collect the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L74-L83).
+The [routing logger](#routing-logger) is taking advantage of this feature to [collect the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L74-L83).
 
 ### Remote address
 
@@ -195,7 +195,7 @@ There is a family of `Query` methods available at your fingertips, including:
 - `QueryFloat64` returns value parsed as float64.
 
 ::: tip
-If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
+If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing the underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
 
 ```go:no-line-numbers
 vals := c.Request().URL.Query()
@@ -206,12 +206,74 @@ vals := c.Request().URL.Query()
 
 No.
 
+The `flamego.Context` is a representation of the request context and should live within the routing layer, where the `context.Context` is a general purpose context and can be propogated to almost anywhere (e.g. database layer).
+
+You can retrieve the `context.Context` of a request using the following methods:
+
+```go:no-line-numbers
+f.Get(..., func(c flamego.Context) {
+    ctx := c.Request().Context()
+    ...
+})
+
+// or
+
+f.Get(..., func(r *http.Request) {
+    ctx := r.Context()
+    ...
+})
+```
+
 ## Default logger
+
+The [`*log.Logger`](https://pkg.go.dev/log#Logger) is available to all handers for general logging purposes, this is particularly useful if you're writing middleware:
+
+```go:no-line-numbers
+package main
+
+import (
+	"log"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/", func(log *log.Logger) {
+		log.Println("Hello, Flamego!")
+	})
+	f.Run()
+}
+```
+
+When you run the above program and do curl http://localhost:2830/, the following logs are printed to your terminal:
+
+```:no-line-numbers
+[Flamego] Listening on 0.0.0.0:2830 (development)
+[Flamego] Hello, Flamego!
+```
+
+The [routing logger](#routing-logger) is taking advantage of this feature to [print the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L98).
 
 ## Response stream
 
-::: tip
-TODO When do Flame instances stop invoking subsequent handlers.
+The response stream of a request is represented by the type [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter), you may use it as an argument of your handlers or through the `ResponseWriter` method of the `flamego.Context`:
+
+```go:no-line-numbers
+f.Get(..., func(w http.ResponseWriter) {
+    ...
+})
+
+// or
+
+f.Get(..., func(c flamego.Context) {
+    w := c.ResponseWriter()
+    ...
+})
+```
+
+::: tip 💡 Did you know?
+Not all handlers that are registered for a route are always being called, the request context (`flamego.Context`) stops invoking subsequent handlers [when the response status code has been written](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202) by the current handler. This is similar to how the [short circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation) works.
 :::
 
 ## Request object
