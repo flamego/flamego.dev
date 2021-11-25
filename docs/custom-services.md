@@ -128,7 +128,7 @@ Injected services can be overridden when you're not happy with the service funct
 
 Here is an example of overriding a global service at the route level:
 
-```go:no-line-numbers
+```go:no-line-numbers{13-14,18-19}
 package main
 
 import (

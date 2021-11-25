@@ -9,6 +9,28 @@ next:
 
 # Routing
 
-## Constructing URL path
+## Registering routes
 
-## Getting bind parameters
+### Single routes
+
+### Combo routes
+
+### Group routes
+
+### Optional routes
+
+## Bind parameters
+
+### Placeholders
+
+### Regular expressions
+
+### Globs
+
+## Matching priority
+
+## Chain of handlers
+
+## Constructing URL paths
+
+## Syntax references

@@ -17,9 +17,9 @@ The classic Flame instance is the one that comes with a reasonable list of defau
 
 A fresh classic Flame instance is returned every time you call [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic), and following middleware are registered automatically:
 
-- [`flamego.Logger`](core-services.md#routing-logger) for logging requested routes
-- [`flamego.Recovery`](core-services.md#panic-recovery) for recovering from panic
-- [`flamego.Static`](core-services.md#serving-static-files) for serving static files
+- [`flamego.Logger`](core-services.md#routing-logger) for logging requested routes.
+- [`flamego.Recovery`](core-services.md#panic-recovery) for recovering from panic.
+- [`flamego.Static`](core-services.md#serving-static-files) for serving static files.
 
 ::: tip
 If you look up [the source code of the `flamego.Classic`](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/flame.go#L65-L77), it is fairly simple:
