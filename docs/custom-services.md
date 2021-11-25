@@ -52,11 +52,52 @@ The `MapTo` method does a naive mapping and runtime panic could occur if the int
 
 ### Global services
 
+When you inject services to the Flame instance without attaching to any route, these injected services are considered as global services, which are available for all handlers of the Flame instance.
+
+There are two ways you can inject a global service, directly call `Map` or `MapTo` on the Flame instance, or through a [global middleware](core-concepts.md#middleware) using the `Use` method:
+
+```go:no-line-numbers
+db := database.New()
+f := flamego.New()
+f.Map(db)
+
+// or
+
+f := flamego.New()
+f.Use(func(c flamego.Context) {
+    db := database.New()
+    c.Map(db)
+})
+```
+
 ### Group services
+
+When you inject services to a group of routes, these injected services are considered as group services, which are available for all handlers within the group.
+
+You can only inject a group service through a [group middleware](core-concepts.md#middleware):
+
+```go{3-7,14}
+f := flamego.New()
+f.Group("/user",
+    func() {
+        f.Get("/settings", func(user *database.User) {
+            ...
+        })
+    },
+    func(c flamego.Context) {
+        user := database.GetUser()
+        c.Map(user)
+    },
+)
+f.Group("/repo", func() {
+    f.Get("/settings", func(user *database.User) {
+        // This handler will cause panic because *database.User is not available
+    })
+})
+```
+
+In the above example, the `*database.User` is only available to the group of routes on line 3 to 7. Trying to use it outside the group will cause panic as illustrated on line 14.
 
 ### Route-level services
 
 ## Overriding services
-
-## `inject.Invoker` vs `inject.FastInvoker`
-

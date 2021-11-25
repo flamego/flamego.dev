@@ -12,6 +12,8 @@ prev:
 
 ## How do I integrate into existing applications?
 
+## What is the difference between `inject.Invoker` and `inject.FastInvoker`?
+
 ## What is the idea behind this other than Macaron/Martini?
 
 ## Why the default port is 2830?

@@ -5,7 +5,7 @@ next:
   link: starter-guide.md
 ---
 
-![banner](imgs/banner-01.jpg)
+![banner](imgs/banner.jpg)
 
 Flamego is a fantastic modular Go web framework boiled with dependency injection.
 
