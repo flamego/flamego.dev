@@ -326,7 +326,7 @@ f.Group("/",
 	middleware4, middleware5, middleware6,
 )
 
-// Route middleware that are scoped down to a single route.
+// Route-level middleware that are scoped down to a single route.
 f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 ```
 

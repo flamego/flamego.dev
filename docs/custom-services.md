@@ -72,7 +72,7 @@ f.Use(func(c flamego.Context) {
 
 ### Group services
 
-When you inject services to a group of routes, these injected services are considered as group services, which are available for all handlers within the group.
+When you inject services to a group of routes, these injected services are considered as group services, which are only available for all handlers within the group.
 
 You can only inject a group service through a [group middleware](core-concepts.md#middleware):
 
@@ -100,4 +100,70 @@ In the above example, the `*database.User` is only available to the group of rou
 
 ### Route-level services
 
+When you inject services to a single route, these injected services are considered as route-level services, which are only available the handlers of that particular route.
+
+You can only inject a route-level service through a [route-level middleware](core-concepts.md#middleware):
+
+```go{7-9,11}
+f := flamego.New()
+f.Get("/user",
+    func(c flamego.Context) {
+        user := database.GetUser()
+        c.Map(user)
+    },
+    f.Get("/settings", func(user *database.User) {
+        ...
+    }),
+)
+f.Get("/repo", func(user *database.User) {
+    // This handler will cause panic because *database.User is not available
+})
+```
+
+In the above example, the `*database.User` is only available to the route on line 7 to 9. Trying to use it in all other routes will cause panic as illustrated on line 11.
+
 ## Overriding services
+
+Injected services can be overridden when you're not happy with the service functionality or behaviors provided by the other middleware.
+
+Here is an example of overriding a global service at the route level:
+
+```go:no-line-numbers
+package main
+
+import (
+	"bytes"
+	"io"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Use(func(c flamego.Context) {
+		buf := bytes.NewBufferString("this is from a global service")
+		f.MapTo(buf, (*io.Reader)(nil))
+	})
+	f.Get("/",
+		func(c flamego.Context) {
+			buf := bytes.NewBufferString("this is from a route-level service")
+			f.MapTo(buf, (*io.Reader)(nil))
+		},
+		func(r io.Reader) string {
+			p, err := io.ReadAll(r)
+			if err != nil {
+				// Handler error
+			}
+			return string(p)
+		},
+	)
+	f.Run()
+}
+```
+
+When you run the above program and do `curl http://localhost:2830/`, the following content are printed to your terminal:
+
+```:no-line-numbers
+$ curl http://localhost:2830
+this is from a route-level service
+```
