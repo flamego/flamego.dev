@@ -4,7 +4,12 @@
 
 This repository holds the source code for building https://flamego.dev, it is using [VuePress](https://v2.vuepress.vuejs.org/) as the site generator and deploys to [Netlify](https://www.netlify.com/).
 
-Run `yarn docs:dev` to start the local preview instance.
+Run following commands to start the local preview instance:
+
+```sh
+yarn add -D vuepress@next
+yarn docs:dev
+```
 
 ## License
 
