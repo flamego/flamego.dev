@@ -297,13 +297,13 @@ http: panic serving 127.0.0.1:50061: unable to invoke the 0th handler [func(main
 :::
 ::::
 
-### Builtin services
-
-There are services that are always injected thus available to every handler, including [`*log.Logger`](https://pkg.go.dev/log#Logger), [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context), [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) and [`*http.Request`](https://pkg.go.dev/net/http#Request).
-
 ::: tip
 If you're interested in learning how exactly the service injection works in Flamego, the [custom services](custom-services.md) has the best resources you would want.
 :::
+
+### Builtin services
+
+There are services that are always injected thus available to every handler, including [`*log.Logger`](https://pkg.go.dev/log#Logger), [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context), [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) and [`*http.Request`](https://pkg.go.dev/net/http#Request).
 
 ## Middleware
 
@@ -331,6 +331,10 @@ f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 ```
 
 Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
+:::
+
+::: tip
+If you're interested in learning how to inject services for your middleware, the [custom services](custom-services.md) has the best resources you would want.
 :::
 
 ## Env
