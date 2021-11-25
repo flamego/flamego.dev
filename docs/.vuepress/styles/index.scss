@@ -1,5 +1,6 @@
 :root {
   scroll-behavior: smooth;
+  font-size: 1.1rem;
 
   // brand colors
   --c-brand: #2e8bee;
@@ -10,6 +11,10 @@
 
   // custom container colors
   --c-tip: #2e8bee;
+
+  // font vars
+  --font-family: "Source Sans Pro", sans-serif;
+  --font-family-code: "Source Code", monospace;
 }
 
 html.dark {
@@ -22,4 +27,8 @@ html.dark {
 
   // custom container colors
   --c-tip: #2e8bee;
+}
+
+body {
+  font-size: 1rem;
 }
