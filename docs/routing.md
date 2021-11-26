@@ -233,7 +233,7 @@ func main() {
 			return fmt.Sprintf(
 				"Welcome to %s, %s!",
 				strings.Title(c.Param("city")),
-				strings.ToUpper(c.Param("state")),
+				c.Param("state"),
 			)
 		},
 	)
@@ -266,6 +266,85 @@ $ curl http://localhost:2830/geo/ma/boston
 :::
 
 ### Globs
+
+A bind parameter can be defined with globs to capture characters across URL path segments (including forward slashes). The only notation for the globs is `**` and allows an optional argument `capture` to define how many URL path segments to capture _at most_.
+
+Below are all valid usages of bind parameters with globs:
+
+```go
+f.Get("/posts/{**: **}", ...)
+f.Get("/webhooks/{repo: **}/events", ...)
+f.Get("/geo/{**: **, capture: 2}", ...)
+```
+
+On line 1, the glob captures everything under the `/posts/` path.
+
+On line 2, the glob captures everything in between a path starts with `/webhooks/` and ends with `/events`.
+
+On line 3, the glob captures at most two URL path segments under the `/geo/` path.
+
+Let's see some examples:
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/posts/{**: **}",
+		func(c flamego.Context) string {
+			return fmt.Sprintf("The post is %s", c.Param("**"))
+		},
+	)
+	f.Get("/webhooks/{repo: **}/events",
+		func(c flamego.Context) string {
+			return fmt.Sprintf("The event is for %s", c.Param("repo"))
+		},
+	)
+	f.Get("/geo/{**: **, capture: 2}",
+		func(c flamego.Context) string {
+			fields := strings.Split(c.Param("**"), "/")
+			return fmt.Sprintf(
+				"Welcome to %s, %s!",
+				strings.Title(fields[1]),
+				strings.ToUpper(fields[0]),
+			)
+		},
+	)
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830/posts/2021/11/26.html
+The post is 2021-11-26.html
+
+$ curl http://localhost:2830/webhooks/flamego/flamego/events
+The event is for flamego/flamego
+
+$ curl http://localhost:2830/geo/ma/boston
+Welcome to Boston, MA!
+```
+:::
+::::
+
+::: tip
+Try doing following test requests and see what changes:
+
+```:no-line-numbers
+$ curl http://localhost:2830/webhooks/flamego/flamego
+$ curl http://localhost:2830/geo/ma/boston/02125
+```
+:::
 
 ## Combo routes
 
