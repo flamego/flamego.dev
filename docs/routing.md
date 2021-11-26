@@ -432,6 +432,41 @@ Here is the breakdown:
 
 ## Constructing URL paths
 
+The URL path can be constructed using the `URLPath` method if you give the corresponding route a name, which helps prevent URL paths are getting out of sync spread across your codebase:
+
+```go:no-line-numbers
+f.Get("/user/?settings", ...).Name("UserSettings")
+f.Get("/users/{name}", ...).Name("UsersName")
+
+f.Get(..., func(c flamego.Context) {
+   c.URLPath("UserSettings")                         // => /user
+   c.URLPath("UserSettings", "withOptional", "true") // => /user/settings
+   c.URLPath("UsersName", "name", "joe")             // => /users/joe
+})
+```
+
 ## Customizing the `NotFound` handler
 
+By default, the [`http.NotFound`](https://pkg.go.dev/net/http#NotFound) is invoked for 404 pages, you can customize the behavior using the `NotFound` method:
+
+```go:no-line-numbers
+f.NotFound(func() string {
+    return "This is a cool 404 page"
+})
+```
+
 ## Auto-registering `HEAD` method
+
+By default, only GET requests is accepted when using the `Get` method to register a route, but it is not uncommon to allow HEAD requests to your web application.
+
+The `AutoHead` method can automatically register HEAD method with same chain of handlers to the same route whenever a GET method is registered:
+
+```go:no-line-numbers
+f.Get("/without-head", ...)
+f.AutoHead(true)
+f.Get("/with-head", ...)
+```
+
+Please note that only routes that are registered after call of the `AutoHead(true)` method will be affected, existing routes remain unchanged.
+
+In the above example, only GET requests are accepted for the `/without-head` path. Both GET and HEAD requests are accepted for the `/with-head` path.
