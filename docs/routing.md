@@ -39,6 +39,11 @@ When you want to match a selected list of HTTP methods for a single route, `Rout
 f.Routes("/", "GET,POST", ...)
 ```
 
+## Terminology
+
+- A **URL path segment** is the portion between two forward slashes, e.g. `/<segment>/`, the trailing forward slash may not present.
+- A **bind parameter** uses curly brackets (`{}`) as its notation, e.g. `{<bind_parameter>}`, bind parameters are only available in [dynamic routes](#dynamic-routes).
+
 ## Static routes
 
 The static routes are probably the most common routes you have been seeing and using, routes are defined in literals and only looking for _exact matches_:
@@ -89,9 +94,7 @@ $ curl http://localhost:2830/user/info
 
 The dynamic routes, by its name, they match request paths dynamically. Flamego provides most powerful dynamic routes in the Go ecosystem, at the time of writing, there is simply no feature parity you can find in all other existing Go web frameworks.
 
-The notation for the dynamic routes is a pair of curly brackets (`{}`), and they are called _bind parameters_ in Flamego.
-
-The `flamego.Context` provides a family of `Param` methods to access values that are captured by the bind parameters, including:
+The `flamego.Context` provides a family of `Param` methods to access values that are captured by bind parameters, including:
 
 - `Params` returns all bind parameters.
 - `Param` returns value of the given bind parameter.
@@ -100,13 +103,13 @@ The `flamego.Context` provides a family of `Param` methods to access values that
 
 ### Placeholders
 
-A placeholder captures anything but a forward slash (`/`), and you may have one or more placeholders within a URL path segment (the portion between two forward slashes).
+A placeholder captures anything but a forward slash (`/`), and you may have one or more placeholders within a URL path segment.
 
 Below are all valid usages of placeholders:
 
 ```go
-f.Get("/user/{name}", ...)
-f.Get("/posts/{year}-{month}-{day}", ...)
+f.Get("/users/{name}", ...)
+f.Get("/posts/{year}-{month}-{day}.html", ...)
 f.Get("/geo/{state}/{city}", ...)
 ```
 
@@ -171,6 +174,96 @@ Try a test request using `curl http://localhost:2830/posts/2021-11-abc.html` and
 :::
 
 ### Regular expressions
+
+A bind parameter can be defined with a custom regular expression to capture characters in a URL path segment, and you may have one or more such bind parameters within a URL path segment. The regular expressions are needed to be surrounded by a pair of forward slashes (`/<regexp>/`).
+
+Below are all valid usages of bind parameters with regular expressions:
+
+```go
+f.Get("/users/{name: /[a-zA-Z0-9]+/}", ...)
+f.Get("/posts/{year: /[0-9]{4}/}-{month: /[0-9]{2}/}-{day: /[0-9]{2}/}.html", ...)
+f.Get("/geo/{state: /[A-Z]{2}/}/{city}", ...)
+```
+
+On line 1, the placeholder named `{name}` to capture everything in a URL path segment.
+
+On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture different portions in a URL path segment.
+
+On line 3, two placeholders are used independently in different URL path segments.
+
+::: tip
+Because forward slashes are used to indicate the use of regular expressions, they cannot be captured via regular expressions, and will cause a routing parser error when you are trying to do so:
+
+```:no-line-numbers
+panic: unable to parse route "/{name: /abc\\//}": 1:15: unexpected token "/" (expected "}")
+```
+:::
+
+Let's see some examples:
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/users/{name: /[a-zA-Z0-9]+/}",
+		func(c flamego.Context) string {
+			return fmt.Sprintf("The user is %s", c.Param("name"))
+		},
+	)
+	f.Get("/posts/{year: /[0-9]{4}/}-{month: /[0-9]{2}/}-{day: /[0-9]{2}/}.html",
+		func(c flamego.Context) string {
+			return fmt.Sprintf(
+				"The post date is %d-%d-%d",
+				c.ParamInt("year"), c.ParamInt("month"), c.ParamInt("day"),
+			)
+		},
+	)
+	f.Get("/geo/{state: /[A-Z]{2}/}/{city}",
+		func(c flamego.Context) string {
+			return fmt.Sprintf(
+				"Welcome to %s, %s!",
+				strings.Title(c.Param("city")),
+				strings.ToUpper(c.Param("state")),
+			)
+		},
+	)
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830/users/joe
+The user is joe
+
+$ curl http://localhost:2830/posts/2021-11-26.html
+The post date is 2021-11-26
+
+$ curl http://localhost:2830/geo/MA/boston
+Welcome to Boston, MA!
+```
+:::
+::::
+
+::: tip
+Try doing following test requests and see what changes:
+
+```:no-line-numbers
+$ curl http://localhost:2830/users/logan-smith
+$ curl http://localhost:2830/posts/2021-11-abc.html
+$ curl http://localhost:2830/geo/ma/boston
+```
+:::
 
 ### Globs
 
