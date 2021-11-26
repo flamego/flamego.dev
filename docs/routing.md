@@ -11,7 +11,7 @@ next:
 
 Every request goes through the routing in order to reach its handlers, that is how important the routing is to be ergonomic. Flamego spends great amount of effort on designing and implementing the routing capability and future extensibility to ensure your developer happiness.
 
-In Flamego, a route is an HTTP method paired with a URL-matching pattern, and each route takes a chain of handlers.
+In Flamego, a route is an HTTP method paired with a URL-matching pattern, and each route takes _a chain of handlers_.
 
 Below are the helpers to register routes for each HTTP method:
 
@@ -348,9 +348,73 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 
 ## Combo routes
 
+The `Combo` method can create combo routes when you have different handlers for different HTTP methods of the same route:
+
+```go:no-line-numbers
+f.Combo("/").Get(...).Post(...)
+```
+
 ## Group routes
 
+Organizing routes in groups not only help code readability, but also encourages code reuse in terms of shared middleware.
+
+It is as easy as wrapping your routes with the `Group` method, and there is no limit on how many level of nestings you may have:
+
+```go{4}
+f.Group("/user", func() {
+    f.Get("/info", ...)
+    f.Group("/settings", func() {
+        f.Get("", ...)
+        f.Get("/account_security", ...)
+    }, middleware3)
+}, middleware1, middleware2)
+```
+
+The line 4 in the above example may seem unusual to you, but that is not a mistake! The equivalent version of it is as follows:
+
+```go:no-line-numbers
+f.Get("/user/settings", ...)
+```
+
+![how does that work](https://media0.giphy.com/media/2gUHK3J2NCMsqsz1su/200w.webp?cid=ecf05e47d3syetfd9ja7nr3qwjfdrs4mnhjh46xq1numt01p&rid=200w.webp&ct=g)
+
+That's because the Flamego router uses [string concatenation to combine group routes](https://github.com/flamego/flamego/blob/503ddd0f43a7281b5d334173aba5e32de2d2b31f/router.go#L201-L205).
+
+Huh, so this also works?
+
+```go:no-line-numbers{3-5}
+f.Group("/user", func() {
+    f.Get("/info", ...)
+    f.Group("/sett", func() {
+        f.Get("ings", ...)
+        f.Get("ings/account_security", ...)
+    }, middleware3)
+}, middleware1, middleware2)
+```
+
+Yes!
+
 ## Optional routes
+
+Optional routes may be used for both static and dynamic routes, and use question mark (`?`) as the notation:
+
+```go:no-line-numbers
+f.Get("/user/?settings", ...)
+f.Get("/users/?{name}", ...)
+```
+
+The above example is essentially a shorthand for the following:
+
+```go:no-line-numbers
+f.Get("/user", ...)
+f.Get("/user/settings", ...)
+f.Get("/users", ...)
+f.Get("/users/{name}", ...)
+```
+
+::: warning
+The optional routes can only be used for the last URL path segment.
+:::
 
 ## Matching priority
 
@@ -359,5 +423,3 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 ## Customizing the `NotFound` handler
 
 ## Auto-registering `HEAD` method
-
-## Syntax references
