@@ -311,10 +311,9 @@ Middleware are the special kind of handlers that are designed as reusable compon
 
 Technically speaking, you may use the term middleware and handlers interchangably but the common sense would be that middleware are providing some services, either by [injecting to the context](https://github.com/flamego/session/blob/f8f1e1893ea6c15f071dd53aefd9494d41ce9e48/session.go#L183-L184) or [intercepting the request](https://github.com/flamego/auth/blob/dbec68df251ff382e908eb5659453d4918a042aa/basic.go#L38-L42), or both. On the other hand, handlers are mainly focusing on the business logic that is unique to your web application and the route that handlers are registered with.
 
-::: tip 💡 Did you know?
 Middleware can be used at anywhere that a `flamego.Handler` is accepted, including at global, group and route level.
 
-```go
+```go{6-9}
 // Global middleware that are invoked before all other handlers.
 f.Use(middleware1, middleware2, middleware3)
 
@@ -331,6 +330,9 @@ f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 ```
 
 Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
+
+::: tip 💡 Did you know?
+Global middleware are always invoked regardless whether a route is matched.
 :::
 
 ::: tip
