@@ -37,11 +37,11 @@ func main() {
 
 ## Features
 
-- The most powerful routing syntax among all web frameworks within the Go ecosystem.
-- Limitless routes nesting and grouping.
+- [The most powerful routing syntax](routing.md) among all web frameworks within the Go ecosystem.
+- [Limitless routes nesting and grouping](routing.md#group-routes).
 - [Inject middleware at wherever you want](core-concepts.md#middleware).
-- Integrate with any existing Go web application non-intrusively.
-- Dependency injection via function signature to write testable and maintainable code.
+- [Integrate with any existing Go web application non-intrusively](faqs.md#how-do-i-integrate-into-existing-applications).
+- [Dependency injection via function signature](core-concepts.md#service-injection) to write testable and maintainable code.
 
 ## Exploring more
 

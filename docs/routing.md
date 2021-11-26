@@ -16,27 +16,27 @@ In Flamego, a route is an HTTP method paired with a URL-matching pattern, and ea
 Below are the helpers to register routes for each HTTP method:
 
 ```go:no-line-numbers
-f.Get("/", func() { ... })
-f.Patch("/", func() { ... })
-f.Post("/", func() { ... })
-f.Put("/", func() { ... })
-f.Delete("/", func() { ... })
-f.Options("/", func() { ... })
-f.Head("/", func() { ... })
-f.Connect("/", func() { ... })
-f.Trace("/", func() { ... })
+f.Get("/", ...)
+f.Patch("/", ...)
+f.Post("/", ...)
+f.Put("/", ...)
+f.Delete("/", ...)
+f.Options("/", ...)
+f.Head("/", ...)
+f.Connect("/", ...)
+f.Trace("/", ...)
 ```
 
 If you want to match all HTTP methods for a single route, `Any` is available for you:
 
 ```go:no-line-numbers
-f.Any("/", func() { ... })
+f.Any("/", ...)
 ```
 
 When you want to match a selected list of HTTP methods for a single route, `Routes` is your friend:
 
 ```go:no-line-numbers
-f.Routes("/", "GET,POST", func() { ... })
+f.Routes("/", "GET,POST", ...)
 ```
 
 ## Static routes
@@ -44,11 +44,11 @@ f.Routes("/", "GET,POST", func() { ... })
 The static routes are probably the most common routes you have been seeing and using, routes are defined in literals and only looking for _exact matches_:
 
 ```go:no-line-numbers
-f.Get("/user", func() { ... })
-f.Get("/repo", func() { ... })
+f.Get("/user", ...)
+f.Get("/repo", ...)
 ```
 
-In the above example, requests to routes other than `/user` and `/repo` will result in 404.
+In the above example, any request that is not a GET request to `/user` or `/repo` will result in 404.
 
 ::: warning
 Unlike the router in `net/http`, where you may use `/user/` to match all subpaths under the `/user` path, it is still a static route in Flamego, and only matches a route IFF the request path is exactly the `/user/`.
@@ -87,7 +87,88 @@ $ curl http://localhost:2830/user/info
 
 ## Dynamic routes
 
+The dynamic routes, by its name, they match request paths dynamically. Flamego provides most powerful dynamic routes in the Go ecosystem, at the time of writing, there is simply no feature parity you can find in all other existing Go web frameworks.
+
+The notation for the dynamic routes is a pair of curly brackets (`{}`), and they are called _bind parameters_ in Flamego.
+
+The `flamego.Context` provides a family of `Param` methods to access values that are captured by the bind parameters, including:
+
+- `Params` returns all bind parameters.
+- `Param` returns value of the given bind parameter.
+- `ParamInt` returns value parsed as int.
+- `ParamInt64` returns value parsed as int64.
+
 ### Placeholders
+
+A placeholder captures anything but a forward slash (`/`), and you may have one or more placeholders within a URL path segment (the portion between two forward slashes).
+
+Below are all valid usages of placeholders:
+
+```go
+f.Get("/user/{name}", ...)
+f.Get("/posts/{year}-{month}-{day}", ...)
+f.Get("/geo/{state}/{city}", ...)
+```
+
+On line 1, the placeholder named `{name}` to capture everything in a URL path segment.
+
+On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture different portions in a URL path segment.
+
+On line 3, two placeholders are used independently in different URL path segments.
+
+Let's see some examples:
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/users/{name}", func(c flamego.Context) string {
+		return fmt.Sprintf("The user is %s", c.Param("name"))
+	})
+	f.Get("/posts/{year}-{month}-{day}.html", func(c flamego.Context) string {
+		return fmt.Sprintf(
+			"The post date is %d-%d-%d",
+			c.ParamInt("year"), c.ParamInt("month"), c.ParamInt("day"),
+		)
+	})
+	f.Get("/geo/{state}/{city}", func(c flamego.Context) string {
+		return fmt.Sprintf(
+			"Welcome to %s, %s!",
+			strings.Title(c.Param("city")),
+			strings.ToUpper(c.Param("state")),
+		)
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl http://localhost:2830/users/joe
+The user is joe
+
+$ curl http://localhost:2830/posts/2021-11-26.html
+The post date is 2021-11-26
+
+$ curl http://localhost:2830/geo/ma/boston
+Welcome to Boston, MA!
+```
+:::
+::::
+
+::: tip
+Try a test request using `curl http://localhost:2830/posts/2021-11-abc.html` and see what changes.
+:::
 
 ### Regular expressions
 
