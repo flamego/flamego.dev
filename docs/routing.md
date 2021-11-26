@@ -418,6 +418,18 @@ The optional routes can only be used for the last URL path segment.
 
 ## Matching priority
 
+When your web application grows large enough, you'll start to want to make sense of which route gets matched at when. This is where the matching priority comes into play.
+
+The matching priority is based on different URL-matching patterns, the matching scope (the narrower scope has the higher priority), and the order of registration.
+
+Here is the breakdown:
+
+1. Static routes are always being matched first, e.g. `/users/settings`.
+1. Dynamic routes with placeholders not capturing everything, e.g. `/users/{name}.html`
+1. Dynamic routes with single placeholder captures everything, e.g. `/users/{name}`.
+1. Dynamic routes with globs in the middle, e.g. `/users/{**: **}/events`.
+1. Dynamic routes with globs in the end, e.g. `/users/{**: **}`.
+
 ## Constructing URL paths
 
 ## Customizing the `NotFound` handler
