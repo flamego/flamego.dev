@@ -18,6 +18,14 @@ module.exports = {
                 href: "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,400;0,600;0,700;1,200;1,400;1,600;1,700&family=Source+Sans+Pro:ital,wght@0,200;0,400;0,600;0,700;1,200;1,400;1,600;1,700&display=swap",
             },
         ],
+        [
+            "script",
+            {
+                src: "https://plausible.io/js/plausible.js",
+                defer: true,
+                data: { domain: "flamego.dev" },
+            },
+        ],
     ],
 
     themeConfig: {
