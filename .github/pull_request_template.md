@@ -7,3 +7,4 @@ Link to the issue: <!-- paste the issue link here, or put "n/a" if not applicabl
 ### Checklist
 
 - [ ] I agree to follow this project's [Code of Conduct](https://golang.org/conduct) by submitting this pull request.
+- [ ] I totally understand sending a pull request has no guarantee to be merged, and the review rounds may take a long time.
