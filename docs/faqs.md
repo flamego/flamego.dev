@@ -161,6 +161,7 @@ Absence of holistic architecture view and design principles have caused many bad
 - The [`*macaron.Context`](https://pkg.go.dev/github.com/go-macaron/macaron#Context) is very heavy, thus [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns) wasn't a thing.
 - The choice of using the opening-only style (e.g. `:name`) for [named parameters](https://go-macaron.com/middlewares/routing#named-parameters) has limited capability and extensibility of the routing syntax.
 - Being too opinionated in many aspects, a simple example is the existence of [`SetConfig`](https://pkg.go.dev/github.com/go-macaron/macaron#SetConfig)/[`Config`](https://pkg.go.dev/github.com/go-macaron/macaron#Config) that kinda kidnaps all users to import the package `"gopkg.in/ini.v1"` but not using it at 99% of the time.
+- The way to [set a cookie](https://go-macaron.com/core_services#cookie) is a disaster.
 
 All in all, Macaron is still an excellent web framework, and Flamego is just better as the successor. 🙂
 
