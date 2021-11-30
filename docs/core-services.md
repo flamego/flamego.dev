@@ -584,3 +584,58 @@ $ curl http://localhost:2830/main.css
 404 page not found
 ```
 :::
+
+## Rendering content
+
+The [`flamego.Renderer`](https://pkg.go.dev/github.com/flamego/flamego#Renderer) is a minimal middleware that is for rendering content, and it accepts an optional [`flamego.RenderOptions`](https://pkg.go.dev/github.com/flamego/flamego#RenderOptions).
+
+The service [`flamego.Render`](https://pkg.go.dev/github.com/flamego/flamego#Render) is injected to your request context and you can use it to render JSON, XML, binary and plain text content:
+
+:::: code-group
+::: code-group-item Code
+```go{13}
+package main
+
+import (
+	"net/http"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Use(flamego.Renderer(
+		flamego.RenderOptions{
+			JSONIndent: "  ",
+		},
+	))
+	f.Get("/", func(r flamego.Render) {
+		r.JSON(http.StatusOK,
+			map[string]interface{}{
+				"id":       1,
+				"username": "joe",
+			},
+		)
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl -i http://localhost:2830/
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+...
+
+{
+  "id": 1,
+  "username": "joe"
+}
+```
+:::
+::::
+
+::: tip
+Try changing the line 13 to `JSONIndent: "",`, then redo all test requests and see what changes.
+:::
