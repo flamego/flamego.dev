@@ -8,7 +8,7 @@ next:
 # Starter guide
 
 ::: warning
-This guide is not intended to teach you how to use [Go](https://golang.org), and would assume you already have basic knowledge about HTTP, web applications development and programming in Go.
+This guide is not intended to teach you how to use [Go](https://go.dev/), and would assume you already have basic knowledge about HTTP, web applications development and programming in Go.
 :::
 
 Let's start with the minimal example you may have seen on the front page:
