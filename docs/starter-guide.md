@@ -129,7 +129,7 @@ On line 11, we're still using the `flamego.Classic` to give us a classic Flame i
 On line 12, insetad of using an anonymous function, function `printRequestPath` is registered as the handler for all of the HTTP GET requests under root path ("/") using the notation `{*}`. The routing match stops at the slash ("/") as you can tell from the last test request to "http://localhost:2830/bad-ass/who-am-i" that gives us 404.
 
 ::: tip
-Try using the notation `{**: **}`, then redo all test requests and see what changes. If you're interested in reading more, the [routing](routing.md) has the best resources you would want.
+Try using the notation `{**}`, then redo all test requests and see what changes. If you're interested in reading more, the [routing](routing.md) has the best resources you would want.
 :::
 
 On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe), which is the most common way to start a web server in Go, and maybe more familiar to you if you have used other Go web frameworks. This is possible with Flamego because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface. Therefore, a Flame instance can be plugged into anywhere that accepts a `http.Handler`, and is particularly useful when you want to progressively migrate an existing Go web application to use Flamego.

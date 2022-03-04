@@ -272,7 +272,7 @@ A bind parameter can be defined with globs to capture characters across URL path
 Below are all valid usages of bind parameters with globs:
 
 ```go
-f.Get("/posts/{**: **}", ...)
+f.Get("/posts/{**}", ...) // A shorthand for "{**: **}"
 f.Get("/webhooks/{repo: **}/events", ...)
 f.Get("/geo/{**: **, capture: 2}", ...)
 ```
@@ -299,7 +299,7 @@ import (
 
 func main() {
 	f := flamego.New()
-	f.Get("/posts/{**: **}",
+	f.Get("/posts/{**}",
 		func(c flamego.Context) string {
 			return fmt.Sprintf("The post is %s", c.Param("**"))
 		},
@@ -427,8 +427,8 @@ Here is the breakdown:
 1. Static routes are always being matched first, e.g. `/users/settings`.
 1. Dynamic routes with placeholders not capturing everything, e.g. `/users/{name}.html`
 1. Dynamic routes with single placeholder captures everything, e.g. `/users/{name}`.
-1. Dynamic routes with globs in the middle, e.g. `/users/{**: **}/events`.
-1. Dynamic routes with globs in the end, e.g. `/users/{**: **}`.
+1. Dynamic routes with globs in the middle, e.g. `/users/{**}/events`.
+1. Dynamic routes with globs in the end, e.g. `/users/{**}`.
 
 ## Constructing URL paths
 
