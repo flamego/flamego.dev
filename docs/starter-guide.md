@@ -2,7 +2,7 @@
 sidebar: false
 next:
   text: Core concepts
-  link: core-concepts.md
+  link: core-concepts
 ---
 
 # Starter guide

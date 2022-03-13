@@ -1,10 +1,10 @@
 ---
 prev:
   text: Starter guide
-  link: starter-guide.md
+  link: starter-guide
 next:
   text: Core services
-  link: core-services.md
+  link: core-services
 ---
 
 # Core concepts
