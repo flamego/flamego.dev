@@ -21,7 +21,7 @@ To accelerate your development, the Flamego core team and the community have bui
 - [gzip](https://github.com/flamego/gzip) for Gzip compression to responses.
 - [cache](https://github.com/flamego/cache) for managing cache data.
 - [brotli](https://github.com/flamego/brotli) for Brotli compression to responses.
-- [auth](https://github.com/flamego/auth) for providing basic and bearer authentication.
+- [auth](auth.md) for providing basic and bearer authentications.
 - [i18n](https://github.com/flamego/i18n) for providing internationalization and localization.
 - [captcha](https://github.com/flamego/captcha) for generating and validating Captcha images.
 - [hcaptcha](https://github.com/flamego/hcaptcha) for providing [hCaptcha](https://www.hcaptcha.com/) verification.
