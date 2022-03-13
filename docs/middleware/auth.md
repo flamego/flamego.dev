@@ -74,4 +74,51 @@ The [`auth.SecureCompare`](https://pkg.go.dev/github.com/flamego/auth#SecureComp
 
 ## Bearer authentication
 
-TODO
+The [`auth.Bearer`](https://pkg.go.dev/github.com/flamego/auth#Bearer) takes a static token to protect routes behind it. Upon successful authentication, the [`auth.Token`](https://pkg.go.dev/github.com/flamego/auth#Token) is injected into the request context, which simply contains the token:
+
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/auth"
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.Classic()
+	f.Use(auth.Bearer("secrettoken"))
+	f.Get("/", func(token auth.Token) string {
+		return "Authenticated through " + string(token)
+	})
+	f.Run()
+}
+```
+
+
+The [`auth.BasicFunc`](https://pkg.go.dev/github.com/flamego/auth#BasicFunc) can be used to support dynamic tokens:
+
+```go:no-line-numbers
+package main
+
+import (
+	"github.com/flamego/auth"
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	tokens := map[string]struct{}{
+		"token":       {},
+		"secrettoken": {},
+	}
+
+	f := flamego.Classic()
+	f.Use(auth.BearerFunc(func(token string) bool {
+		_, ok := tokens[token]
+		return ok
+	}))
+	f.Get("/", func(token auth.Token) string {
+		return "Authenticated through " + string(token)
+	})
+	f.Run()
+}
+```
