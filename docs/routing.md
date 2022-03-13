@@ -1,7 +1,7 @@
 ---
 prev:
   text: Custom services
-  link: custom-services.md
+  link: custom-services
 next:
   text: Middleware
   link: middleware

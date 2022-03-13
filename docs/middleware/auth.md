@@ -2,9 +2,9 @@
 prev:
   text: Middleware
   link: middleware
-# next:
-#   text: Core services
-#   link: core-services.md
+next:
+  text: cors
+  link: cors
 ---
 
 # auth

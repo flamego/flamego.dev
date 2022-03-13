@@ -1,10 +1,10 @@
 ---
 prev:
   text: Core services
-  link: core-services.md
+  link: core-services
 next:
   text: Routing
-  link: routing.md
+  link: routing
 ---
 
 # Custom services

@@ -2,7 +2,7 @@
 sidebar: false
 next:
   text: Starter guide
-  link: starter-guide.md
+  link: starter-guide
 ---
 
 ![banner](imgs/banner.jpg)

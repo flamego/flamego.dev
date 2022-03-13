@@ -1,10 +1,10 @@
 ---
 prev:
   text: Core concepts
-  link: core-concepts.md
+  link: core-concepts
 next:
   text: Custom services
-  link: custom-services.md
+  link: custom-services
 ---
 
 # Core services
