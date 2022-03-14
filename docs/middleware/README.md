@@ -19,7 +19,7 @@ To accelerate your development, the Flamego core team and the community have bui
 - [cors](cors.md) for configuring [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
 - [binding](https://github.com/flamego/binding) for request data binding and validation.
 - [gzip](gzip.md) for Gzip compression to responses.
-- [cache](https://github.com/flamego/cache) for managing cache data.
+- [cache](cache.md) for managing cache data.
 - [brotli](brotli.md) for Brotli compression to responses.
 - [auth](auth.md) for providing basic and bearer authentications.
 - [i18n](https://github.com/flamego/i18n) for providing internationalization and localization.
