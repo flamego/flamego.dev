@@ -1,10 +1,7 @@
 ---
 prev:
   text: Middleware
-  link: middleware
-next:
-  text: cors
-  link: cors
+  link: ../middleware
 ---
 
 # auth

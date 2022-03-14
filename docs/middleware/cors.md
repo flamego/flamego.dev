@@ -1,10 +1,7 @@
 ---
 prev:
-  text: auth
-  link: auth
-# next:
-#   text: Core services
-#   link: core-services.md
+  text: Middleware
+  link: ../middleware
 ---
 
 # cors
@@ -22,6 +19,8 @@ go get github.com/flamego/cors
 ```
 
 ## Usage examples
+
+The [`cors.CORS`](https://pkg.go.dev/github.com/flamego/cors#CORS) works out-of-the-box with the default settings:
 
 ```go:no-line-numbers
 package main
