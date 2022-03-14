@@ -18,9 +18,9 @@ To accelerate your development, the Flamego core team and the community have bui
 - [csrf](https://github.com/flamego/csrf) for generating and validating CSRF tokens.
 - [cors](cors.md) for configuring [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
 - [binding](https://github.com/flamego/binding) for request data binding and validation.
-- [gzip](https://github.com/flamego/gzip) for Gzip compression to responses.
+- [gzip](gzip.md) for Gzip compression to responses.
 - [cache](https://github.com/flamego/cache) for managing cache data.
-- [brotli](https://github.com/flamego/brotli) for Brotli compression to responses.
+- [brotli](brotli.md) for Brotli compression to responses.
 - [auth](auth.md) for providing basic and bearer authentications.
 - [i18n](https://github.com/flamego/i18n) for providing internationalization and localization.
 - [captcha](https://github.com/flamego/captcha) for generating and validating Captcha images.
