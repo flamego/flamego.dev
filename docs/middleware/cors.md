@@ -20,7 +20,7 @@ go get github.com/flamego/cors
 
 ## Usage examples
 
-The [`cors.CORS`](https://pkg.go.dev/github.com/flamego/cors#CORS) works out-of-the-box with the default settings:
+The [`cors.CORS`](https://pkg.go.dev/github.com/flamego/cors#CORS) works out-of-the-box with an optional [`cors.Options`](https://pkg.go.dev/github.com/flamego/cors#Options):
 
 ```go:no-line-numbers
 package main
