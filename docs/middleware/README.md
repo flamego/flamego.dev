@@ -13,7 +13,7 @@ next:
 To accelerate your development, the Flamego core team and the community have built some useful middleware in addition to the [core services](../core-services.md) that are builtin to the core framework.
 
 - [template](https://github.com/flamego/template) for rendering HTML using Go template.
-- [session](https://github.com/flamego/session) for managing user sessions.
+- [session](session.md) for managing user sessions.
 - [recaptcha](https://github.com/flamego/recaptcha) for providing [Google reCAPTCHA](https://www.google.com/recaptcha/about/) verification.
 - [csrf](https://github.com/flamego/csrf) for generating and validating CSRF tokens.
 - [cors](cors.md) for configuring [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).

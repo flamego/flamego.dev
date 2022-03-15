@@ -18,7 +18,9 @@ The minimum requirement of Go is **1.16**.
 go get github.com/flamego/cache
 ```
 
-## Memory
+## Storage backends
+
+### Memory
 
 The [`cache.Cacher`](https://pkg.go.dev/github.com/flamego/cache#Cacher) works out-of-the-box with an optional [`cache.Options`](https://pkg.go.dev/github.com/flamego/cache#Options) and uses memory as the storage backend:
 
@@ -57,7 +59,7 @@ func main() {
 
 Because the memory is volatile, cache data do not survive over restarts. Choose other storage backends if you need to persist cache data.
 
-## File
+### File
 
 The [`cache.FileIniter`](https://pkg.go.dev/github.com/flamego/cache#FileIniter) is the function to initialize a file storage backend, used together with [`cache.FileConfig`](https://pkg.go.dev/github.com/flamego/cache#FileConfig) to customize the backend:
 
@@ -103,7 +105,7 @@ func main() {
 }
 ```
 
-## PostgreSQL
+### PostgreSQL
 
 The [`postgres.Initer`](https://pkg.go.dev/github.com/flamego/cache/postgres#Initer) is the function to initialize a PostgreSQL storage backend, used together with [`postgres.Config`](https://pkg.go.dev/github.com/flamego/cache/postgres#Config) to customize the backend:
 
@@ -153,7 +155,7 @@ func main() {
 }
 ```
 
-## MySQL
+### MySQL
 
 The [`mysql.Initer`](https://pkg.go.dev/github.com/flamego/cache/mysql#Initer) is the function to initialize a MySQL storage backend, used together with [`mysql.Config`](https://pkg.go.dev/github.com/flamego/cache/mysql#Config) to customize the backend:
 
@@ -203,7 +205,7 @@ func main() {
 }
 ```
 
-## Redis
+### Redis
 
 The [`redis.Initer`](https://pkg.go.dev/github.com/flamego/cache/redis#Initer) is the function to initialize a Redis storage backend, used together with [`redis.Config`](https://pkg.go.dev/github.com/flamego/cache/redis#Config) to customize the backend:
 
@@ -253,7 +255,7 @@ func main() {
 }
 ```
 
-## MongoDB
+### MongoDB
 
 The [`mongo.Initer`](https://pkg.go.dev/github.com/flamego/cache/mongo#Initer) is the function to initialize a MongoDB storage backend, used together with [`mongo.Config`](https://pkg.go.dev/github.com/flamego/cache/mongo#Config) to customize the backend:
 
