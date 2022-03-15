@@ -24,7 +24,7 @@ go get github.com/flamego/csrf
 Examples included in this section is to demonstrate the usage of the csrf middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
 :::
 
-The [`csrf.Csrfer()`](https://pkg.go.dev/github.com/flamego/csrf#Csrfer) works out-of-the-box with an optional [`csrf.Options`](https://pkg.go.dev/github.com/flamego/csrf#Options), and the [`csrf.Validate`](https://pkg.go.dev/github.com/flamego/csrf#Validate) should be used to guard routes that needs CSRF validation:
+The [`csrf.Csrfer`](https://pkg.go.dev/github.com/flamego/csrf#Csrfer) works out-of-the-box with an optional [`csrf.Options`](https://pkg.go.dev/github.com/flamego/csrf#Options), and the [`csrf.Validate`](https://pkg.go.dev/github.com/flamego/csrf#Validate) should be used to guard routes that needs CSRF validation:
 
 :::: code-group
 ::: code-group-item main.go
