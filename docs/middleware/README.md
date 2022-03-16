@@ -23,7 +23,7 @@ To accelerate your development, the Flamego core team and the community have bui
 - [brotli](brotli.md) for Brotli compression to responses.
 - [auth](auth.md) for providing basic and bearer authentications.
 - [i18n](i18n.md) for providing internationalization and localization.
-- [captcha](https://github.com/flamego/captcha) for generating and validating Captcha images.
+- [captcha](captcha.md) for generating and validating captcha images.
 - [hcaptcha](https://github.com/flamego/hcaptcha) for providing [hCaptcha](https://www.hcaptcha.com/) verification.
 
 ::: tip
