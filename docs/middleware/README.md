@@ -24,7 +24,7 @@ To accelerate your development, the Flamego core team and the community have bui
 - [auth](auth.md) for providing basic and bearer authentications.
 - [i18n](i18n.md) for providing internationalization and localization.
 - [captcha](captcha.md) for generating and validating captcha images.
-- [hcaptcha](https://github.com/flamego/hcaptcha) for providing [hCaptcha](https://www.hcaptcha.com/) verification.
+- [hcaptcha](hcaptcha.md) for providing [hCaptcha](https://www.hcaptcha.com/) verification.
 
 ::: tip
 If you notice any middleware that is missing from the list, please don't hesitate to [send a pull request to this page](https://github.com/flamego/flamego.dev/edit/main/docs/middleware/README.md)!
