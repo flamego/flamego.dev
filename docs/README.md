@@ -7,7 +7,7 @@ next:
 
 ![banner](imgs/banner.jpg)
 
-Flamego is a fantastic modular Go web framework boiled with dependency injection.
+Flamego is a fantastic modular Go web framework with a slim core but limitless extensibility.
 
 It is the successor of the [Macaron](https://github.com/go-macaron/macaron), and equips the most powerful routing syntax among all web frameworks within the Go ecosystem.
 
