@@ -12,7 +12,7 @@ next:
 
 To accelerate your development, the Flamego core team and the community have built some useful middleware in addition to the [core services](../core-services.md) that are builtin to the core framework.
 
-- [template](https://github.com/flamego/template) for rendering HTML using Go template.
+- [template](template.md) for rendering HTML using Go template.
 - [session](session.md) for managing user sessions.
 - [recaptcha](recaptcha.md) for providing [Google reCAPTCHA](https://www.google.com/recaptcha/about/) verification.
 - [csrf](csrf.md) for generating and validating CSRF tokens.
