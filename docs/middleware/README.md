@@ -17,7 +17,7 @@ To accelerate your development, the Flamego core team and the community have bui
 - [recaptcha](recaptcha.md) for providing [Google reCAPTCHA](https://www.google.com/recaptcha/about/) verification.
 - [csrf](csrf.md) for generating and validating CSRF tokens.
 - [cors](cors.md) for configuring [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
-- [binding](https://github.com/flamego/binding) for request data binding and validation.
+- [binding](binding.md) for request data binding and validation.
 - [gzip](gzip.md) for Gzip compression to responses.
 - [cache](cache.md) for managing cache data.
 - [brotli](brotli.md) for Brotli compression to responses.

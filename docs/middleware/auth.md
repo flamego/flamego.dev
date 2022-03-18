@@ -18,7 +18,9 @@ The minimum requirement of Go is **1.16**.
 go get github.com/flamego/auth
 ```
 
-## Basic authentication
+## Usage examples
+
+### Basic authentication
 
 The [`auth.Basic`](https://pkg.go.dev/github.com/flamego/auth#Basic) takes a static combination of username and password to protect routes behind it. Upon successful authentication, the [`auth.User`](https://pkg.go.dev/github.com/flamego/auth#User) is injected into the request context, which simply contains the username:
 
@@ -69,7 +71,7 @@ func main() {
 
 The [`auth.SecureCompare`](https://pkg.go.dev/github.com/flamego/auth#SecureCompare) is a function that does constant time compare of two strings to prevent timing attacks.
 
-## Bearer authentication
+### Bearer authentication
 
 The [`auth.Bearer`](https://pkg.go.dev/github.com/flamego/auth#Bearer) takes a static token to protect routes behind it. Upon successful authentication, the [`auth.Token`](https://pkg.go.dev/github.com/flamego/auth#Token) is injected into the request context, which simply contains the token:
 
