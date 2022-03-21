@@ -132,4 +132,34 @@ module.exports = {
         lastUpdated: true,
         contributors: false,
     },
+
+    plugins: [
+        [
+            "@vuepress/plugin-docsearch",
+            {
+                apiKey: "3d0b6f791fd53ca9e72b76121882a3c5",
+                appId: "H5Z5B7U47X",
+                indexName:
+                    "netlify_8c6545f8-a001-4515-b052-63847be97752_main_all",
+                locales: {
+                    "/": {
+                        placeholder: "Search",
+                        translations: {
+                            button: {
+                                buttonText: "Search",
+                            },
+                        },
+                    },
+                    "/zh-CN/": {
+                        placeholder: "搜索文档",
+                        translations: {
+                            button: {
+                                buttonText: "搜索文档",
+                            },
+                        },
+                    },
+                },
+            },
+        ],
+    ],
 };

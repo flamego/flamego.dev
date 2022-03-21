@@ -8,6 +8,7 @@ Run following commands to start the local preview instance:
 
 ```sh
 yarn add -D vuepress@next
+yarn add -D @vuepress/plugin-docsearch@next
 yarn docs:dev
 ```
 
