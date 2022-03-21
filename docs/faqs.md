@@ -167,4 +167,4 @@ All in all, Macaron is still an excellent web framework, and Flamego is just bet
 
 ## Why the default port is 2830?
 
-![keyboard layout 2830](imgs/keyboard-layout-2830.png)
+![keyboard layout 2830](/imgs/keyboard-layout-2830.png)

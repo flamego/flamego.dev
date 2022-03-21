@@ -5,7 +5,7 @@ next:
   link: starter-guide
 ---
 
-![banner](imgs/banner.jpg)
+![banner](/imgs/banner.jpg)
 
 Flamego is a fantastic modular Go web framework with a slim core but limitless extensibility.
 

@@ -364,7 +364,7 @@ func main() {
 
 When you run the above program and visit [http://localhost:2830/](http://localhost:2830/), the recovered page is displayed:
 
-![panic recovery](imgs/panic-recovery.png)
+![panic recovery](/imgs/panic-recovery.png)
 
 ## Serving static files
 
