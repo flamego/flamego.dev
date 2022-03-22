@@ -124,7 +124,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/
 HTTP/1.1 302 Found
@@ -173,7 +173,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl http://localhost:2830?name=joe
 The name is joe
@@ -484,7 +484,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl http://localhost:2830/main.css
 html {
@@ -564,7 +564,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl http://localhost:2830/css/main.css
 html {
@@ -621,7 +621,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/
 HTTP/1.1 200 OK

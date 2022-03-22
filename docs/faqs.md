@@ -95,7 +95,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/user/info
 The user is Joe
@@ -136,7 +136,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/user/info
 The user is Joe

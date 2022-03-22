@@ -62,7 +62,7 @@ func main() {
 
 In the above example, `f1` has some default middleware registered as a classic Flame instance, while `f2` only has a single middleware `flamego.Recovery`.
 
-::: tip 💬 话题讨论
+::: tip 💬 Do you agree?
 Storing states in the way that is polluting global namespace is such a bad practice that not only makes the code hard to maintain in the future, but also creates more tech debt with every single new line of the code.
 
 It feels so elegent to have isolated state managed by each Flame instance, and make it possible to migrate existing web applications to use Flamego progressively.
@@ -114,7 +114,7 @@ func (t *customType) handler() string {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl http://localhost:2830/anonymous
 Respond from an anonymous function
@@ -166,7 +166,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/string
 HTTP/1.1 200 OK
@@ -227,7 +227,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 $ curl -i http://localhost:2830/string
 HTTP/1.1 200 OK
@@ -289,7 +289,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item 测试
+::: code-group-item Test
 ```:no-line-numbers
 http: panic serving 127.0.0.1:50061: unable to invoke the 0th handler [func(main.myService)]: value not found for type main.myService
 ...
