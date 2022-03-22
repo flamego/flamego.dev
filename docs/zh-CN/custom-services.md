@@ -7,33 +7,29 @@ next:
   link: routing
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 自定义服务
 
-The [core services](core-services.md) from Flamego are great, but they are certainly not enough for your web applications, Inevitably, you will start want to make your own [middleware](core-concepts.md#middleware) and custom services that are specifically fitting your needs.
+Flamego 提供的[核心服务](core-services.md)都很实用，但对于开发复杂的 Web 应用来说显然是远远不够的。届时，你必然会需要开发自己的[中间件](core-concepts.md#中间件)来满足应用的实际需求。
 
-## Injecting services
+## 注入服务
 
-The Flame instance is building on top of the [`inject.TypeMapper`](https://pkg.go.dev/github.com/flamego/flamego/inject#TypeMapper) to provide service injections for your handlers. Both [`flamego.Flame`](https://pkg.go.dev/github.com/flamego/flamego#Flame) and [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context) have embeded the `inject.TypeMapper` that allow you to inject services at anywhere you want.
+Flame 实例是基于 [`inject.TypeMapper`](https://pkg.go.dev/github.com/flamego/flamego/inject#TypeMapper) 来为处理器提供服务注入功能的，并且内置在了 [`flamego.Flame`](https://pkg.go.dev/github.com/flamego/flamego#Flame) 和 [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context) 这两个类型中，以便中间件和处理器进行服务注入的管理和使用。
 
-The `Map` method is used to inject services (aka. map values to their own types), the injected service can be a concrete type ([`*log.Logger`](https://pkg.go.dev/log#Logger)) or an interface ([`io.Writer`](https://pkg.go.dev/io#Writer)):
+`Map` 是用于注入服务类型本身的方法，可以是具体的类型（如 [`*log.Logger`](https://pkg.go.dev/log#Logger) ）或接口（如 [`io.Writer`](https://pkg.go.dev/io#Writer)）：
 
 ```go:no-line-numbers
 l := log.New(os.Stdout, "[Flamego] ", 0)
 f := flamego.New()
 f.Map(l)
 
-// or
+// 或
 
 var w io.Writer = &bytes.Buffer{}
 f := flamego.New()
 f.Map(w)
 ```
 
-The `MapTo` method works similar to `Map` but instead of ~~mapping values to their own types~~, it allows you to _map values to interfaces_:
+`MapTo` 是用于将某个服务类型注入为其实现的某一接口的方法：
 
 ```go:no-line-numbers
 buf := &bytes.Buffer{}
@@ -41,7 +37,7 @@ f := flamego.New()
 f.MapTo(buf, (*io.Writer)(nil))
 ```
 
-You may also use the `MapTo` method to transform interfaces to other interfaces:
+你也可以使用  `MapTo` 方法将一个接口变换为另一个接口：
 
 ```go:no-line-numbers
 var w io.ReadCloser = io.NopCloser(&bytes.Buffer{})
@@ -51,21 +47,21 @@ f.MapTo(w, (*io.Closer)(nil))
 ```
 
 ::: warning
-The `MapTo` method does a naive mapping and runtime panic could occur if the interface you're mapping to is not implemented by the type of the underlying value you're giving.
+`MapTo` 仅实现无脑的类型映射，如果服务的底层类型并没有实现对应的接口则会在运行时发生错误。
 :::
 
-### Global services
+### 全局服务
 
-When you inject services to the Flame instance without attaching to any route, these injected services are considered as global services, which are available for all handlers of the Flame instance.
+全局服务直接与整个 Flame 实例而非具体某个路由绑定，且可以被所有路由的处理器使用。
 
-There are two ways you can inject a global service, directly call `Map` or `MapTo` on the Flame instance, or through a [global middleware](core-concepts.md#middleware) using the `Use` method:
+全局服务可以通过调用 Flame 实例的 `Map` 或 `MapTo` 方法完成注入，或通过调用 `Use` 方法在[全局中间件](core-concepts.md#中间件)中注入：
 
 ```go:no-line-numbers
 db := database.New()
 f := flamego.New()
 f.Map(db)
 
-// or
+// 或
 
 f := flamego.New()
 f.Use(func(c flamego.Context) {
@@ -74,11 +70,9 @@ f.Use(func(c flamego.Context) {
 })
 ```
 
-### Group services
+### 组级服务
 
-When you inject services to a group of routes, these injected services are considered as group services, which are only available for all handlers within the group.
-
-You can only inject a group service through a [group middleware](core-concepts.md#middleware):
+组级服务可以被组内的所有路由的处理器使用，并且只可以通过[组级中间件](core-concepts.md#中间件)注入：
 
 ```go{3-7,14}
 f := flamego.New()
@@ -95,18 +89,16 @@ f.Group("/user",
 )
 f.Group("/repo", func() {
     f.Get("/settings", func(user *database.User) {
-        // This handler will cause panic because *database.User is not available
+        // 由于 *database.User 对该路由并不可用，该处理器会发生运行时错误
     })
 })
 ```
 
-In the above example, the `*database.User` is only available to the group of routes on line 3 to 7. Trying to use it outside the group will cause panic as illustrated on line 14.
+上例中，`*database.User` 仅可被用于位于第 3 至 7 行的路由组内，尝试在该路由组外使用它会导致运行时错误（第 14 行）。
 
-### Route-level services
+### 路由级服务
 
-When you inject services to a single route, these injected services are considered as route-level services, which are only available the handlers of that particular route.
-
-You can only inject a route-level service through a [route-level middleware](core-concepts.md#middleware):
+路由级服务仅可被与该路由绑定的处理器使用，并且只可以通过[路由级中间件](core-concepts.md#中间件)注入：
 
 ```go{7-9,11}
 f := flamego.New()
@@ -120,17 +112,17 @@ f.Get("/user",
     }),
 )
 f.Get("/repo", func(user *database.User) {
-    // This handler will cause panic because *database.User is not available
+    // 由于 *database.User 对该路由并不可用，该处理器会发生运行时错误
 })
 ```
 
-In the above example, the `*database.User` is only available to the route on line 7 to 9. Trying to use it in all other routes will cause panic as illustrated on line 11.
+上例中，`*database.User` 仅可被用于位于第 7 至 9 行的路由内，尝试在该路由外使用它会导致运行时错误（第 11 行）。
 
-## Overriding services
+## 重载服务
 
-Injected services can be overridden when you're not happy with the service functionality or behaviors provided by the other middleware.
+你可以通过重载已注入的服务更变服务的状态或行为。
 
-Here is an example of overriding a global service at the route level:
+下面展示了如何在路由级重载一个全局服务：
 
 ```go:no-line-numbers{13-14,18-19}
 package main
@@ -156,7 +148,7 @@ func main() {
 		func(r io.Reader) string {
 			p, err := io.ReadAll(r)
 			if err != nil {
-				// Handler error
+				// 处理错误
 			}
 			return string(p)
 		},
@@ -165,7 +157,7 @@ func main() {
 }
 ```
 
-When you run the above program and do `curl http://localhost:2830/`, the following content are printed to your terminal:
+运行上面的程序并执行 `curl http://localhost:2830/` 后，可以在终端看到如下输出：
 
 ```:no-line-numbers
 $ curl http://localhost:2830
