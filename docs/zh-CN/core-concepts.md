@@ -7,26 +7,22 @@ next:
   link: core-services
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 核心概念
 
-This page describes foundational concepts that are required to be proficient of using Flamego to build web applications that are most optimal.
+本文档讲解了精通 Flamego 开发 Web 应用所必备的基础概念。
 
 ## 经典 Flame
 
-The classic Flame instance is the one that comes with a reasonable list of default middleware and could be your starting point for build web applications using Flamego.
+经典 Flame 实例集成了一些大多数 Web 应用都会用到的默认中间件。
 
-A fresh classic Flame instance is returned every time you call [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic), and following middleware are registered automatically:
+每次调用 [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) 方法都会返回一个全新的经典 Flame 实例，并自动注册以下中间件：
 
-- [`flamego.Logger`](core-services.md#routing-logger) for logging requested routes.
-- [`flamego.Recovery`](core-services.md#panic-recovery) for recovering from panic.
-- [`flamego.Static`](core-services.md#serving-static-files) for serving static files.
+- [`flamego.Logger`](core-services.md#routing-logger) 用于请求路由日志
+- [`flamego.Recovery`](core-services.md#panic-recovery) 用于从 panic 恢复
+- [`flamego.Static`](core-services.md#serving-static-files) 用于响应静态资源
 
 ::: tip
-If you look up [the source code of the `flamego.Classic`](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/flame.go#L65-L77), it is fairly simple:
+如果查看 [`flamego.Classic` 的源码](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/flame.go#L65-L77)则不难发现它其实也不过一层浅浅的封装：
 
 ```go:no-line-numbers
 func Classic() *Flame {
@@ -44,14 +40,14 @@ func Classic() *Flame {
 }
 ```
 
-Do keep in mind that `flamego.Classic` may not always be what you want if you do not use these default middleware (e.g. for using custom implementations), or to use different config options, or even just want to change the order of middleware as sometimes the order matters (i.e. middleware are being invoked in the same order as they are registered).
+不过 `flamego.Classic` 只是在一定程度上提供了便利，但并不总是你所需要的，比如需要使用第三方开发的中间件来替换官方实现、更改自定义中间件的配置选项或变换中间件的注册顺序等等。
 :::
 
 ## 实例
 
-The function [`flamego.New`](https://pkg.go.dev/github.com/flamego/flamego#New) is used to create bare Flame instances that do not have default middleware registered, and any type that contains the [`flamego.Flame`](https://pkg.go.dev/github.com/flamego/flamego#Flame) can be seen as a Flame instance.
+[`flamego.New`](https://pkg.go.dev/github.com/flamego/flamego#New) 函数可以创建没有注册任何中间件的纯净 Flame 实例，并且任何包含 [`flamego.Flame`](https://pkg.go.dev/github.com/flamego/flamego#Flame) 的类型都可以被视作一个 Flame 实例。
 
-Each Flame instace is independent of other Flame instances in the sense that instance state is not shared and is maintained separately by each of them. For example, you can have two Flame instances simultaneously and both of them can have different middleware, routes and handlers registered or defined:
+每个 Flame 实例都是独立于其它 Flame 实例而存在的。换句话说，实例之间的状态不会进行隐性地共享或相互影响。例如，你可以同时创建两个 Flame 实例并为它们注册不同的中间件、配置不同的路由和定义不同的处理器：
 
 ```go:no-line-numbers
 func main() {
@@ -64,17 +60,17 @@ func main() {
 }
 ```
 
-In the above example, `f1` has some default middleware registered as a classic Flame instance, while `f2` only has a single middleware `flamego.Recovery`.
+在上例中，`f1` 集成了经典 Flame 实例所自带的默认中间件，而 `f2` 仅仅注册了其中一个中间件，即 `flamego.Recovery`。
 
-::: tip 💬 Do you agree?
-Storing states in the way that is polluting global namespace is such a bad practice that not only makes the code hard to maintain in the future, but also creates more tech debt with every single new line of the code.
+::: tip 💬 话题讨论
+在全局命名空间中存储的状态会容易受到其它因素的副作用而发生隐性的绑定关系，这种隐性绑定关系对于未来的代码维护和升级都是巨大的挑战，是产生技术债务的主要来源之一。
 
-It feels so elegent to have isolated state managed by each Flame instance, and make it possible to migrate existing web applications to use Flamego progressively.
+与之相对的，Flame 实例的状态管理非常干净和优雅，实例之间从设计上进行状态隔离，并为渐进式迁移现有 Web 应用提供了便利。
 :::
 
 ## 处理器
 
-Flamego handlers are defined as [`flamego.Hander`](https://pkg.go.dev/github.com/flamego/flamego#Handler), and if you look closer, it is just an empty interface (`interface{}`):
+[`flamego.Hander`](https://pkg.go.dev/github.com/flamego/flamego#Handler) 是 Flamego 中处理器的类型容器，如果你打开源码便能发现其本质上就是一个空接口（`interface{}`）：
 
 ```go:no-line-numbers
 // Handler is any callable function. Flamego attempts to inject services into
@@ -83,10 +79,10 @@ Flamego handlers are defined as [`flamego.Hander`](https://pkg.go.dev/github.com
 type Handler interface{}
 ```
 
-As being noted in the docstring, any callable function is a valid `flamego.Handler`, doesn't matter if it's an anonymous, a declared function or even a method of a type:
+根据注释文档的所言，任何可以被调用的函数都是有效的 `flamego.Handler`，无论是匿名函数、声明函数还是某个类型的方法：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -118,7 +114,7 @@ func (t *customType) handler() string {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830/anonymous
 Respond from an anonymous function
@@ -134,18 +130,18 @@ Respond from a method of a type
 
 ## 返回值
 
-Generally, your web application needs to write content directly to the [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) (which you can retrieve using `ResponseWriter` method of [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context)). In some web frameworks, they offer returning an extra `error` as the indication of the server error as follows:
+Web 应用向客户端响应内容的一般做法是向 [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) 写入内容（该对象可以通过 [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context) 的 `ResponseWriter` 获得）。在部分 Web 框架中，还允许用户额外返回一个 `error` 类型的返回值用于表示是否发生服务端错误：
 
 ```go:no-line-numbers
 func handler(w http.ResponseWriter, r *http.Request) error
 ```
 
-However, you are still being limited to a designated list of return values from your handlers. In contrast, Flamego provides the flexibility of having different lists of return values from handlers based on your needs case by case, whether it's an error, a string, or just a status code.
+即便如此，仍旧没有解决用户所定义的处理器必须符合几个有限的函数签名设计。Flamego 的一大特性便是允许用户为不同的处理器灵活定义它们所需要的返回值，不管是错误、字符串还是状态码。
 
-Let's see some examples that you can use for your handlers:
+下面列举了一些处理器可以使用的内置返回值：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go
 package main
 
@@ -170,7 +166,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl -i http://localhost:2830/string
 HTTP/1.1 200 OK
@@ -194,18 +190,18 @@ Return an error
 :::
 ::::
 
-As you can see, if an error is returned, the Flame instance automatically sets the HTTP status code to be 500.
+如上所示，当处理器返回错误时，Flame 实例会将 HTTP 状态码自动设为 500.
 
 ::: tip
-Try returning `nil` for the error on line 18, then redo the test request and see what changes.
+尝试将第 18 行的返回值修改为 `nil`，然后重新运行一遍之前的测试，看看会有什么不同。
 :::
 
-### Return with a status code
+### 返回状态码
 
-In the cases that you want to have complete control over the status code of your handlers, that is also possible!
+你也可以通过返回值来精准控制每个处理器响应给客户端的状态码：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -231,7 +227,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl -i http://localhost:2830/string
 HTTP/1.1 200 OK
@@ -259,24 +255,23 @@ Return an error
 
 ## 服务注入
 
-Flamego is claimed to be boiled with [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) because of the service injection, it is the soul of the framework. The Flame instance uses the [`inject.Injector`](https://pkg.go.dev/github.com/flamego/flamego/inject#Injector) to manage injected services and resolves dependencies of a handler's argument list at the time of the handler invocation.
+Flamego 的[依赖注入](https://en.wikipedia.org/wiki/Dependency_injection)思想主要体现在服务注入上，是整个框架的灵魂所在。Flame 实例通过 [`inject.Injector`](https://pkg.go.dev/github.com/flamego/flamego/inject#Injector) 来管理服务注入和依赖解析，实现在运行时为每个处理器提供其所需的参数对象。
 
-Both dependency injection and service injection are very abstract concepts, so it is much easier to explain with examples:
+依赖注入和服务注入都是比较抽象的概念，直接通过例子讲解会更容易上手：
 
 ```go:no-line-numbers
-// Both `http.ResponseWriter` and `*http.Request` are injected,
-// so they can be used as handler arguments.
+// http.ResponseWriter 和 *http.Request 都已经被注入到请求上下文中，
+// 因此它们可以直接被当作处理器的参数使用。
 f.Get("/", func(w http.ResponseWriter, r *http.Request) { ... })
 
-// The `flamego.Context` is probably the most frequently used
-// service in your web applications.
+// flamego.Context 是使用 Flamego 构建的 Web 应用中最常见的服务
 f.Get("/", func(c flamego.Context) { ... })
 ```
 
-What happens if you try to use a service that hasn't been injected?
+那假如处理器使用了未被注入的服务作为参数会发生什么？
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -293,7 +288,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 http: panic serving 127.0.0.1:50061: unable to invoke the 0th handler [func(main.myService)]: value not found for type main.myService
 ...
@@ -302,26 +297,26 @@ http: panic serving 127.0.0.1:50061: unable to invoke the 0th handler [func(main
 ::::
 
 ::: tip
-If you're interested in learning how exactly the service injection works in Flamego, the [custom services](custom-services.md) has the best resources you would want.
+如果你对服务注入的底层原理感兴趣，可以阅读[自定义服务](custom-services.md)的相关内容。
 :::
 
-### Builtin services
+### 内置服务
 
-There are services that are always injected thus available to every handler, including [`*log.Logger`](https://pkg.go.dev/log#Logger), [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context), [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) and [`*http.Request`](https://pkg.go.dev/net/http#Request).
+Flame 实例为每个请求都提供了一些内置的服务，包括 [`*log.Logger`](https://pkg.go.dev/log#Logger)、[`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context)、[`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) 和 [`*http.Request`](https://pkg.go.dev/net/http#Request)。
 
-## Middleware
+## 中间件
 
-Middleware are the special kind of handlers that are designed as reusable components, and often accepting configurable options. There is no difference between middleware and handlers from compiler's point of view.
+中间件是一种特殊的处理器，它们被设计为可复用的组件并允许用户通过配置选项进行自定义。站在编译器的角度上，处理器和中间件没有任何区别。
 
-Technically speaking, you may use the term middleware and handlers interchangably but the common sense would be that middleware are providing some services, either by [injecting to the context](https://github.com/flamego/session/blob/f8f1e1893ea6c15f071dd53aefd9494d41ce9e48/session.go#L183-L184) or [intercepting the request](https://github.com/flamego/auth/blob/dbec68df251ff382e908eb5659453d4918a042aa/basic.go#L38-L42), or both. On the other hand, handlers are mainly focusing on the business logic that is unique to your web application and the route that handlers are registered with.
+中间件和处理器虽然只是名称上的不同，但一般会使用中间件来表示提供特定服务的处理器，可以是[将某个服务注入到请求上下文](https://github.com/flamego/session/blob/f8f1e1893ea6c15f071dd53aefd9494d41ce9e48/session.go#L183-L184)或者是[解析请求内容](https://github.com/flamego/auth/blob/dbec68df251ff382e908eb5659453d4918a042aa/basic.go#L38-L42)。处理器则与路由进行配合为 Web 应用提供特定的业务逻辑支撑。
 
-Middleware can be used at anywhere that a `flamego.Handler` is accepted, including at global, group and route level.
+中间件可以被用在任何接受 `flamego.Handler` 类型的地方，包括全局、组级或路由级。
 
 ```go{6-9}
-// Global middleware that are invoked before all other handlers.
+// 全局中间件会在其它所有中间件和处理器之前被调用
 f.Use(middleware1, middleware2, middleware3)
 
-// Group middleware that are scoped down to a group of routes.
+// 组级中间件仅在组内定义的路由被匹配时才被调用
 f.Group("/",
 	func() {
 		f.Get("/hello", func() { ... })
@@ -329,27 +324,27 @@ f.Group("/",
 	middleware4, middleware5, middleware6,
 )
 
-// Route-level middleware that are scoped down to a single route.
+// 路由级中间件仅在所绑定的路由被匹配时才被调用
 f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 ```
 
-Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
+需要注意的是，中间件永远比处理器先被调用。例如第 9 行的组级中间件虽然在语法上是后于组内路由的处理器（第 6 至 8 行）定义的，但在运行时它们仍旧是先于这些处理器被调用。
 
 ::: tip 💡 小贴士
-Global middleware are always invoked regardless whether a route is matched.
+无论是否发生路由匹配，全局中间件总是会被调用。
 :::
 
 ::: tip
-If you're interested in learning how to inject services for your middleware, the [custom services](custom-services.md) has the best resources you would want.
+如果你想要创建自己的中间件进行服务注入，可以阅读[自定义服务](custom-services.md)的相关内容。
 :::
 
-## Env
+## 运行环境
 
-Flamego environment provides the ability to control behaviors of middleware and handlers based on the running environment of your web application. It is defined as the type [`EnvType`](https://pkg.go.dev/github.com/flamego/flamego#EnvType) and has some pre-defined values, including `flamego.EnvTypeDev`, `flamego.EnvTypeProd` and `flamego.EnvTypeTest`, which is for indicating development, production and testing environment respectively.
+Flamego 运行环境为中间件和处理器提供了统一的环境变量接口 [`EnvType`](https://pkg.go.dev/github.com/flamego/flamego#EnvType)，从而允许中间件和处理器的代码逻辑可以根据不同的运行环境定义不同的行为。目前预定义的运行环境包括 `flamego.EnvTypeDev`、`flamego.EnvTypeProd` 和 `flamego.EnvTypeTest`，分别代表了开发环境、生产环境和测试环境。
 
-For example, the [template](./middleware/template.md#template-caching) middleware [rebuilds template files for every request when in `flamego.EnvTypeDev`](https://github.com/flamego/template/blob/ced6948bfc8cb49e32412380e407cbbe01485937/template.go#L229-L241), but caches the template files otherwise.
+例如，[template](./middleware/template.md#模板缓存) 中间件会在[运行环境为 `flamego.EnvTypeDev` 时为响应每个请求而重新编译模板](https://github.com/flamego/template/blob/ced6948bfc8cb49e32412380e407cbbe01485937/template.go#L229-L241)，但在其它运行环境缓存模板的编译结果。
 
-The Flamego environment is typically configured via the environment variable `FLAMEGO_ENV`:
+Flamego 的运行环境一般通过环境变量 `FLAMEGO_ENV` 进行配置：
 
 ```sh:no-line-numbers
 export FLAMEGO_ENV=development
@@ -357,4 +352,4 @@ export FLAMEGO_ENV=production
 export FLAMEGO_ENV=test
 ```
 
-In case you want to retrieve or alter the environment in your web application, [`Env`](https://pkg.go.dev/github.com/flamego/flamego#Env) and [`SetEnv`](https://pkg.go.dev/github.com/flamego/flamego#SetEnv) methods are also available, and both of them are safe to be used concurrently.
+当然，Web 应用也可以在运行时通过 [`Env`](https://pkg.go.dev/github.com/flamego/flamego#Env) 和 [`SetEnv`](https://pkg.go.dev/github.com/flamego/flamego#SetEnv) 方法对运行环境实现并发安全地读取和更新。

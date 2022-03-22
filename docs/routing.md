@@ -155,7 +155,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830/users/joe
 The user is joe
@@ -241,7 +241,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830/users/joe
 The user is joe
@@ -323,7 +323,7 @@ func main() {
 }
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830/posts/2021/11/26.html
 The post is 2021-11-26.html

@@ -99,13 +99,13 @@ func printRequestPath(c flamego.Context) string {
 我们可以通过运行一些例子来佐证：
 
 :::: code-group
-::: code-group-item Run
+::: code-group-item 运行
 ```:no-line-numbers
 $ go run main.go
 2021/11/18 14:00:03 Server is running...
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830
 The request path is: /

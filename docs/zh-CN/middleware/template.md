@@ -182,7 +182,7 @@ var Templates embed.FS
 :::
 ::::
 
-## Template caching
+## 模板缓存
 
 When your application is running with `flamego.EnvTypeDev` (default) or `flamego.EnvTypeTest`, template files are reloaded and recomplied upon every client request.
 

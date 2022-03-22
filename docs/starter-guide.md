@@ -99,13 +99,13 @@ As you may have guessed, this program responds back the request path that the cl
 Take a look!
 
 :::: code-group
-::: code-group-item Run
+::: code-group-item 运行
 ```:no-line-numbers
 $ go run main.go
 2021/11/18 14:00:03 Server is running...
 ```
 :::
-::: code-group-item Test
+::: code-group-item 测试
 ```:no-line-numbers
 $ curl http://localhost:2830
 The request path is: /
