@@ -5,10 +5,6 @@ next:
   link: core-concepts
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 初学指南
 
 ::: warning
@@ -136,20 +132,20 @@ $ curl http://localhost:2830/bad-ass/who-am-i
 尝试使用 `{**}` 作为通配符语法，然后重新运行一遍之前的测试，看看会有什么不同。如果你对这里的细节感兴趣，可以阅读[路由配置](routing.md)的相关内容。
 :::
 
-On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe), which is the most common way to start a web server in Go, and maybe more familiar to you if you have used other Go web frameworks. This is possible with Flamego because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface. Therefore, a Flame instance can be plugged into anywhere that accepts a `http.Handler`, and is particularly useful when you want to progressively migrate an existing Go web application to use Flamego.
+在程序的第 15 行，使用 Go 语言 Web 应用中最常使用的 [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe) 来替换 Flame 实例内置的 `f.Run` 启动 Web 服务。你可能好奇为什么 Flame 实例可以被传递给 `http.ListenAndServe` 作为参数，这是因为每个 Flame 实例都实现了 [`http.Handler`](https://pkg.go.dev/net/http#Handler) 接口。由于这个特性的存在，使得将现有 Web 应用从其它 Web 框架逐步迁移到 Flamego 变得切实可行。
 
-On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flaemgo.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
+在程序的第 18 至 20 行，我们定义了一个名为 `printRequestPath` 的函数，使它接受 [`flaemgo.Context`](core-services.md#context) 作为参数并返回一个字符串作为返回值。在函数体内，通过调用 `Request` 方法获取到包含客户端请求路径的 [`http.Request`](https://pkg.go.dev/net/http#Request) 对象。
 
 ::: tip 💡 小贴士
-You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but [an empty interface (`interface{}`)](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17).
+你可能会疑惑 `printRequestPath` 函数在被调用的时候是如何获得对应的参数对象的，这涉及到 Flamego 中处理器的本质。如果你查看 [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler) 的类型定义便会发现它其实是一个[空接口（`interface{}`）](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17)。
 
-So how does the Flame instance determine what to pass down to its handlers at runtime?
+那么 Flame 实例又是如何在运行时确定将哪些参数传递给对应的处理器的呢？
 
-This is the beauty (or confusion? 😅) of the [service injection](core-concepts.md#service-injection), and [`flamego.Context`](core-services#context) is one of the default services that are injected into every request.
+这就是[服务注入](core-concepts.md#服务注入)的魅力（或者说迷惑 😅）所在，[`flamego.Context`](core-services#context) 只不过是被注入每个请求中的默认服务之一罢了。
 :::
 
-## Wrapping up
+## 小结
 
-At this point, you should have some basic understanding of what is Flamego and how to start using it in your Go web applications.
+现在，你应该对 Flamego 有了基本的了解，并知道如何使用它进行构建 Go Web 应用了。
 
-Starting a new journey is never easy, especially when there are a lot of new concepts and content to learn. Please don't be hesitate reaching out for help and have a nice day!
+学习一项新的知识从来不是简单的过程，尤其是当会接触到许多新概念的时候。所以请及时寻求帮助，并祝生活愉快！

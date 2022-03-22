@@ -257,7 +257,7 @@ Return an error
 
 ![How cool is that?](https://media0.giphy.com/media/hS4Dz87diTpnDXf98E/giphy.gif?cid=ecf05e47go1oiqgxj1ro7e3t1usexogh109gigssvhxlp93a&rid=giphy.gif&ct=g)
 
-## Service injection
+## 服务注入
 
 Flamego is claimed to be boiled with [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) because of the service injection, it is the soul of the framework. The Flame instance uses the [`inject.Injector`](https://pkg.go.dev/github.com/flamego/flamego/inject#Injector) to manage injected services and resolves dependencies of a handler's argument list at the time of the handler invocation.
 
