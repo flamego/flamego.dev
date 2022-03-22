@@ -9,7 +9,7 @@ next:
 
 # Core services
 
- To get you off the ground, Flamego provides some core services that are essential to almost all web applications. However, you are not required to use all of them. The design principle of Flamego is always building the minimal core and pluggable addons at your own choice.
+To get you off the ground, Flamego provides some core services that are essential to almost all web applications. However, you are not required to use all of them. The design principle of Flamego is always building the minimal core and pluggable addons at your own choice.
 
 ## Context
 
@@ -444,8 +444,6 @@ $ tree .
 ├── js
 │   └── main.js
 └── main.go
-
-2 directories, 5 files
 ```
 :::
 ::: code-group-item css/main.css
@@ -528,8 +526,6 @@ tree .
 ├── go.mod
 ├── go.sum
 └── main.go
-
-1 directory, 4 files
 ```
 :::
 ::: code-group-item css/main.css

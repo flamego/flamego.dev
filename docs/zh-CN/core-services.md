@@ -7,19 +7,15 @@ next:
   link: custom-services
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 核心服务
 
- To get you off the ground, Flamego provides some core services that are essential to almost all web applications. However, you are not required to use all of them. The design principle of Flamego is always building the minimal core and pluggable addons at your own choice.
+为了帮助用户快速构建 Web 应用，Flamego 提供了一些几乎每个 Web 应用都会使用到的核心服务，但是否使用这些核心服务的选择权仍旧在用户手里。Flamego 的设计理念永远是简洁的核心以及按需扩展，不会捆绑给用户不需要的东西。
 
-## Context
+## 请求上下文
 
-Every handler invocation comes with its own request context, which is represented as the type [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context). Data and state are not shared among these request contexts, which makes handler invocations independent from each other unless your web application has defined some other shared resources (e.g. database connections, cache).
+每个处理器在运行时被调用都会获得一个类型为 [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context) 的请求上下文。除了一些如缓存、数据库连接等有状态的资源之外，每个请求上下文之间的数据和状态并不隐性共享。
 
-Thereforce, `flamego.Context` is available to use out-of-the-box by your handlers:
+因为，`flamego.Context` 可以在你的处理器中被直接使用：
 
 ```go:no-line-numbers
 func main() {
@@ -33,9 +29,9 @@ func main() {
 
 ### Next
 
-When a route is matched by a request, the Flame instance [queues a chain of handlers](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/flame.go#L82-L84) (including middleware) to be invoked in the same order as they are registered.
+当一个路由被匹配时，Flame 实例会将与路由绑定的中间件和处理器按照注册的顺序[生成一个调用栈](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/flame.go#L82-L84)。
 
-By default, the next handler will only be invoked after the previous one in the chain has finished. You may change this behvaior using the `Next` method, which allows you to pause the execution of the current handler and resume after the rest of the chain finished.
+在默认情况下，调用栈中的处理器只有在前一个处理器执行完成并退出后才会调用后续的处理器。但是，你可以通过调用 `Next` 方法来改变这种默认行为，从而使得当前处理器的逻辑暂停执行，直到后续的所有处理器执行完成后再恢复执行。
 
 ```go:no-line-numbers
 package main
@@ -62,7 +58,7 @@ func main() {
 }
 ```
 
-When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
+运行上面的程序并执行 `curl http://localhost:2830/` 后，可以在终端看到如下输出：
 
 ```:no-line-numbers
 [Flamego] Listening on 0.0.0.0:2830 (development)
@@ -71,11 +67,11 @@ executing the second handler
 exiting the first handler
 ```
 
-The [routing logger](#routing-logger) is taking advantage of this feature to [collect the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L74-L83).
+[路由日志](#路由日志)就是利用这个功能实现[响应时间和状态码的收集](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L74-L83)。
 
-### Remote address
+### 客户端地址
 
-Web applications often want to know where clients are coming from, then the `RemoteAddr()` method is the convenient helper made for you:
+Web 应用经常会想要知道客户端的来源地址，`RemoteAddr()` 则是一个提供获取客户端地址的辅助方法：
 
 ```go:no-line-numbers
 func main() {
@@ -87,26 +83,24 @@ func main() {
 }
 ```
 
-The `RemoteAddr()` method is smarter than the standard library that only looks at the `http.Request.RemoteAddr` field (which stops working if your web application is behind a reverse proxy), it also takes into consideration of some well-known headers.
+标准库的 `http.Request.RemoteAddr` 字段仅会记录客户端的最近发起地址，如果 Web 应用存在反向代理的话，这个字段的值就显得毫无意义。`RemoteAddr()` 方法会按照如下顺序从一些特定的 HTTP 请求头中获取潜在的客户端地址：
 
-This method looks at following things in the order to determine which one is more likely to contain the real client address:
+- `X-Real-IP`
+- `X-Forwarded-For`
+- `http.Request.RemoteAddr`
 
-- The `X-Real-IP` request header
-- The `X-Forwarded-For` request header
-- The `http.Request.RemoteAddr` field
-
-This way, you can configure your reverse proxy to pass on one of these headers.
+这样一来，就可以配置反向代理提供这些请求头来将客户端地址传递给你的 Web 应用。
 
 ::: warning
-The client can always fake its address using a proxy or VPN, getting the remote address is always considered as a best effort in web applications.
+目前并没有绝对可靠的方法来获取真实的客户端地址，尤其是在客户端使用 VPN 或者代理访问 Web 应用的情况下。
 :::
 
-### Redirect
+### 重定向
 
-The `Redirect` method is [a shorthand for the `http.Redirect`](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/context.go#L225-L232) given the fact that the request context knows what the `http.ResponseWriter` and `*http.Request` are for the current request, and uses the `http.StatusFound` as the default status code for the redirection:
+`Redirect` 方法是 [`http.Redirect` 方法的语法糖](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/context.go#L225-L232)，因为它可以直接从 Flame 实例的请求上下文中获取重定向所需的 `http.ResponseWriter` 和 `*http.Request` 对象，并使用 `http.StatusFound` 作为默认的跳转码：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -142,25 +136,23 @@ HTTP/1.1 301 Moved Permanently
 ::::
 
 ::: warning
-Be aware that the `Redirect` method does a naive redirection and is vulnerable to the [open redirect vulnerability](https://portswigger.net/kb/issues/00500100_open-redirection-reflected).
-
-For example, the following is also works as a valid redirection:
+`Redirect` 仅实现了无脑的重定向逻辑，因此可能使你的 Web 应用遭受[开放重定向漏洞](https://portswigger.net/kb/issues/00500100_open-redirection-reflected)的攻击，例如：
 
 ```go:no-line-numbers
 c.Redirect("https://www.google.com")
 ```
 
-Please make sure to always first validating the user input!
+请务必在进行重定向之前检验用户的输入！
 :::
 
-### URL parameters
+### URL 参数
 
-[URL parameters](https://www.semrush.com/blog/url-parameters/), also known as "URL query parameters", or "URL query strings", are commonly used to pass arguments to the backend for all HTTP methods (POST forms have to be sent with POST method, as the counterpart).
+[URL 参数](https://www.semrush.com/blog/url-parameters/)，也叫“URL 查询参数”，又叫“URL 查询字符串”，常被用于页面传递参数给后端服务器。
 
-The `Query` method is built as a helper for accessing the URL parameters, and return an empty string if no such parameter found with the given key:
+`Query` 是用于获取 URL 参数的辅助方法，若指定参数不存在则返回空字符串：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -188,31 +180,31 @@ The name is
 :::
 ::::
 
-There is a family of `Query` methods available at your fingertips, including:
+Flame 实例的请求上下文提供了一系列相关的辅助方法，包括：
 
-- `QueryTrim` trims spaces and returns value.
-- `QueryStrings` returns a list of strings.
-- `QueryUnescape` returns unescaped query result.
-- `QueryBool` returns value parsed as bool.
-- `QueryInt` returns value parsed as int.
-- `QueryInt` returns value parsed as int64.
-- `QueryFloat64` returns value parsed as float64.
+- `QueryTrim` 去除空格并返回值
+- `QueryStrings` 返回字符串列表
+- `QueryUnescape` 返回未经反转义的值
+- `QueryBool` 返回解析为 `bool` 类型的值
+- `QueryInt` 返回解析为 `int` 类型的值
+- `QueryInt` 返回解析为 `int64` 类型的值
+- `QueryFloat64` 返回解析为 `float64` 类型的值
 
 ::: tip
-If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing the underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
+如果现有的辅助方法不能满足应用需求，你还可以通过直接操作底层的 [`url.Values`](https://pkg.go.dev/net/url#Values) 来获取：
 
 ```go:no-line-numbers
 vals := c.Request().URL.Query()
 ```
 :::
 
-### Is `flamego.Context` a replacement to `context.Context`?
+### `flamego.Context` 是否可以替代 `context.Context`？
 
-No.
+不可以。
 
-The `flamego.Context` is a representation of the request context and should live within the routing layer, where the `context.Context` is a general purpose context and can be propogated to almost anywhere (e.g. database layer).
+`flamego.Context` 是请求上下文的容器，仅适用于路由层，而 `context.Context` 是通用的上下文容器，应当被用于后续的传递（如传递到数据库层）。
 
-You can retrieve the `context.Context` of a request using the following methods:
+你可以通过如下方法获取请求所对应的 `context.Context`：
 
 ```go:no-line-numbers
 f.Get(..., func(c flamego.Context) {
@@ -220,7 +212,7 @@ f.Get(..., func(c flamego.Context) {
     ...
 })
 
-// or
+// 或
 
 f.Get(..., func(r *http.Request) {
     ctx := r.Context()
@@ -228,9 +220,9 @@ f.Get(..., func(r *http.Request) {
 })
 ```
 
-## Default logger
+## 默认日志器
 
-The [`*log.Logger`](https://pkg.go.dev/log#Logger) is available to all handers for general logging purposes, this is particularly useful if you're writing middleware:
+[`*log.Logger`](https://pkg.go.dev/log#Logger) 可以作为所有中间件和处理器的通用日志器使用：
 
 ```go:no-line-numbers
 package main
@@ -250,25 +242,25 @@ func main() {
 }
 ```
 
-When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
+运行上面的程序并执行 `curl http://localhost:2830/` 后，可以在终端看到如下输出：
 
 ```:no-line-numbers
 [Flamego] Listening on 0.0.0.0:2830 (development)
 [Flamego] Hello, Flamego!
 ```
 
-The [routing logger](#routing-logger) is taking advantage of this feature to [print the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L98).
+[路由日志](#路由日志)就是使用了这个核心服务实现[响应时间和状态码的打印](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L98)。
 
-## Response stream
+## 响应流
 
-The response stream of a request is represented by the type [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter), you may use it as an argument of your handlers or through the `ResponseWriter` method of the `flamego.Context`:
+请求的响应流是通过 [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) 类型来表示的，你可以通过处理器参数或调用 `flamego.Context` 的 `ResponseWriter` 方法来获取它：
 
 ```go:no-line-numbers
 f.Get(..., func(w http.ResponseWriter) {
     ...
 })
 
-// or
+// 或
 
 f.Get(..., func(c flamego.Context) {
     w := c.ResponseWriter()
@@ -277,19 +269,19 @@ f.Get(..., func(c flamego.Context) {
 ```
 
 ::: tip 💡 小贴士
-Not all handlers that are registered for a route are always being invoked, the request context (`flamego.Context`) stops invoking subsequent handlers [when the response status code has been written](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202) by the current handler. This is similar to how the [short circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation) works.
+并不是所有在调用栈中的中间件和处理器都一定会被调用，请求上下文（`flamego.Context`）会在[任一输出状态码的处理器](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202)执行完成之后停止调用剩余的处理器，这个机制类似于[短路评估](https://en.wikipedia.org/wiki/Short-circuit_evaluation)。
 :::
 
-## Request object
+## 请求对象
 
-The request object is represented by the type [`*http.Request`](https://pkg.go.dev/net/http#Request), you may use it as an argument of your handlers or through the `Request().Request` field of the `flamego.Context`:
+请求对象是通过 [`*http.Request`](https://pkg.go.dev/net/http#Request) 类型来表示的，你可以通过处理器参数或调用 `flamego.Context` 的 `Request().Request` 方法来获取它：
 
 ```go:no-line-numbers
 f.Get(..., func(r *http.Request) {
     ...
 })
 
-// or
+// 或
 
 f.Get(..., func(c flamego.Context) {
     r := c.Request().Request
@@ -297,9 +289,9 @@ f.Get(..., func(c flamego.Context) {
 })
 ```
 
-You may wonder what does `c.Request()` return in the above example?
+你可能会疑惑上例中的 `c.Request()` 返回的是什么类型？
 
-Good catch! It returns a thin wrapper of the `*http.Request` and has the type [`*flamego.Request`](https://pkg.go.dev/github.com/flamego/flamego#Request), which provides helpers to read the request body:
+这个方法返回的是 `*http.Request` 类型的一层简单封装 [`*flamego.Request`](https://pkg.go.dev/github.com/flamego/flamego#Request)，包含了一些用于读取请求体的辅助方法，例如：
 
 ```go:no-line-numbers
 f.Get(..., func(c flamego.Context) {
@@ -308,13 +300,13 @@ f.Get(..., func(c flamego.Context) {
 })
 ```
 
-## Routing logger
+## 路由日志
 
 ::: tip
-This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
+该中间件是通过 [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) 所创建的 Flame 实例的默认中间件之一。
 :::
 
-The [`flamego.Logger`](https://pkg.go.dev/github.com/flamego/flamego#Logger) is the middleware that provides logging of requested routes and corresponding status code:
+[`flamego.Logger`](https://pkg.go.dev/github.com/flamego/flamego#Logger) 是用于提供请求路由和状态码记录的中间件：
 
 ```go:no-line-numbers
 package main
@@ -333,7 +325,7 @@ func main() {
 }
 ```
 
-When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
+运行上面的程序并执行 `curl http://localhost:2830/` 后，可以在终端看到如下输出：
 
 ```:no-line-numbers
 [Flamego] Listening on 0.0.0.0:2830 (development)
@@ -341,13 +333,13 @@ When you run the above program and do `curl http://localhost:2830/`, the followi
 [Flamego] ...: Completed GET / 200 OK in 165.791µs
 ```
 
-## Panic recovery
+## Panic 恢复
 
 ::: tip
-This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
+该中间件是通过 [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) 所创建的 Flame 实例的默认中间件之一。
 :::
 
-The [`flamego.Recovery`](https://pkg.go.dev/github.com/flamego/flamego#Recovery) is the middleware that is for recovering from panic:
+[`flamego.Recovery`](https://pkg.go.dev/github.com/flamego/flamego#Recovery) 是用于捕捉 panic 并自动恢复的中间件：
 
 ```go:no-line-numbers
 package main
@@ -366,17 +358,17 @@ func main() {
 }
 ```
 
-When you run the above program and visit [http://localhost:2830/](http://localhost:2830/), the recovered page is displayed:
+运行上面的程序并访问 [http://localhost:2830/](http://localhost:2830/) 可以看到如下内容：
 
 ![panic recovery](/imgs/panic-recovery.png)
 
-## Serving static files
+## 响应静态资源
 
 ::: tip
-This middleware is automatically registered when you use [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) to create a Flame instance.
+该中间件是通过 [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) 所创建的 Flame 实例的默认中间件之一。
 :::
 
-The [`flamego.Static`](https://pkg.go.dev/github.com/flamego/flamego#Static) is the middleware that is for serving static files, and it accepts an optional [`flamego.StaticOptions`](https://pkg.go.dev/github.com/flamego/flamego#StaticOptions):
+[`flamego.Static`](https://pkg.go.dev/github.com/flamego/flamego#Static) 是用于向客户端提供静态资源响应的中间件，并可以通过 [`flamego.StaticOptions`](https://pkg.go.dev/github.com/flamego/flamego#StaticOptions) 进行配置：
 
 ```go:no-line-numbers
 func main() {
@@ -390,7 +382,7 @@ func main() {
 }
 ```
 
-You may also omit passing the options for using all default values:
+你也可以直接使用默认配置：
 
 ```go:no-line-numbers
 func main() {
@@ -400,9 +392,9 @@ func main() {
 }
 ```
 
-### Example: Serving the source file
+### 示例：响应源文件
 
-In this example, we're going to treat our source code file as the static resources:
+在本例中，我们会将源文件本身作为静态资源响应给客户端：
 
 ```go{11-12}
 package main
@@ -423,21 +415,18 @@ func main() {
 }
 ```
 
-On line 11, we changed the `Directory` to be the working directory (`"./"`) instead of the default value `"public"`.
+在示例的第 11 行，我们将 `Directory` 的值设置为工作目录（`"./"`）而非默认值 `"public"`。
 
-On line 12, we changed the index file (the file to be served when listing a directory) to be `main.go` instead of the default value `"index.html"`.
+在示例的第 12 行，我们将索引文件设置为 `main.go` 而非默认值 `"index.html"`。
 
-When you save the above program as `main.go` and run it, both `curl http://localhost:2830/` and `curl http://localhost:2830/main.go` will response the content of this `main.go` back to you.
+将上面的程序保存至 `main.go` 并且运行它，然后执行 `curl http://localhost:2830/` 或 `curl http://localhost:2830/main.go` 都可以得到 `main.go` 的文件内容本身。
 
+### 示例：响应多个目录
 
-### Example: Serving multiple directories
-
-In this example, we're going to serve static resources for two different directories.
-
-Here is the setup for the example:
+在本例中，我们会将两个不同目录的文件作为静态资源响应给客户端：
 
 :::: code-group
-::: code-group-item Directory
+::: code-group-item 文件树
 ```:no-line-numbers
 $ tree .
 .
@@ -448,8 +437,6 @@ $ tree .
 ├── js
 │   └── main.js
 └── main.go
-
-2 directories, 5 files
 ```
 :::
 ::: code-group-item css/main.css
@@ -501,7 +488,7 @@ console.log("Hello, Flamego!");
 :::
 ::::
 
-You may have noticed that the client should not include the value of `Directory`, which are `"css"` and `"js"` in the example. If you would like the client to include these values, you can use the `Prefix` option:
+你可能注意到客户端不需要将 `Directory` 的值作为请求路径的一部分，即本例中的 `"css"` 和 `"js"`。如果你希望客户端带有请求前缀，则可以通过配置 `Prefix` 实现：
 
 ```go:no-line-numbers{4}
 f.Use(flamego.Static(
@@ -513,17 +500,15 @@ f.Use(flamego.Static(
 ```
 
 ::: tip 💡 小贴士
-The value of `Prefix` does not have to be the same as the value of `Directory`.
+虽然本例中的 `Prefix` 和 `Directory` 值是相同的，但并不是必须的，它们之间没有直接关联。
 :::
 
-### Example: Serving the `embed.FS`
+### 示例：响应 `embed.FS`
 
-In this example, we're going to serve static resources from the [`embed.FS`](https://pkg.go.dev/embed#FS) that was [introduced in Go 1.16](https://blog.jetbrains.com/go/2021/06/09/how-to-use-go-embed-in-go-1-16/).
-
-Here is the setup for the example:
+在本例中，我们会将自 [Go 1.16 起支持](https://blog.jetbrains.com/go/2021/06/09/how-to-use-go-embed-in-go-1-16/)的 [`embed.FS`](https://pkg.go.dev/embed#FS) 作为静态资源的数据来源响应给客户端：
 
 :::: code-group
-::: code-group-item Directory
+::: code-group-item 文件树
 ```:no-line-numbers
 tree .
 .
@@ -532,8 +517,6 @@ tree .
 ├── go.mod
 ├── go.sum
 └── main.go
-
-1 directory, 4 files
 ```
 :::
 ::: code-group-item css/main.css
@@ -579,9 +562,9 @@ html {
 ::::
 
 ::: warning
-Because the Go embed encodes the entire path (i.e. including parent directories), the client have to use the full path, which is different from serving static files directly from the local disk.
+由于 Go embed 功能会编码文件的完整路径，客户端必须携带父目录的信息才可以访问到对应的资源，这和直接从本地文件响应有所区别。
 
-In other words, the following command will not work for the example:
+下面是错误的客户端请求方式：
 
 ```:no-line-numbers
 $ curl http://localhost:2830/main.css
@@ -589,14 +572,14 @@ $ curl http://localhost:2830/main.css
 ```
 :::
 
-## Rendering content
+## 渲染内容
 
-The [`flamego.Renderer`](https://pkg.go.dev/github.com/flamego/flamego#Renderer) is a minimal middleware that is for rendering content, and it accepts an optional [`flamego.RenderOptions`](https://pkg.go.dev/github.com/flamego/flamego#RenderOptions).
+[`flamego.Renderer`](https://pkg.go.dev/github.com/flamego/flamego#Renderer) 是用于向客户端渲染指定数据格式的中间件，并可以通过 [`flamego.RenderOptions`](https://pkg.go.dev/github.com/flamego/flamego#RenderOptions) 进行配置。
 
-The service [`flamego.Render`](https://pkg.go.dev/github.com/flamego/flamego#Render) is injected to your request context and you can use it to render JSON, XML, binary and plain text content:
+[`flamego.Render`](https://pkg.go.dev/github.com/flamego/flamego#Render) 会作为渲染服务注入到请求的上下文中，你可以用它渲染 JSON、XML、二进制或纯文本格式的数据：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go{13}
 package main
 
@@ -641,5 +624,5 @@ Content-Type: application/json; charset=utf-8
 ::::
 
 ::: tip
-Try changing the line 13 to `JSONIndent: "",`, then redo all test requests and see what changes.
+尝试将第 13 行修改为 `JSONIndent: "",`，然后重新运行一遍之前的测试，看看会有什么不同。
 :::
