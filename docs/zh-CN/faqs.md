@@ -169,6 +169,6 @@ Absence of holistic architecture view and design principles have caused many bad
 
 All in all, Macaron is still an excellent web framework, and Flamego is just better as the successor. 🙂
 
-## Why the default port is 2830?
+## 为什么默认端口是 2830？
 
 ![keyboard layout 2830](/imgs/keyboard-layout-2830.png)

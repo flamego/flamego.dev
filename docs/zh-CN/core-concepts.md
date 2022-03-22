@@ -15,7 +15,7 @@ next:
 
 This page describes foundational concepts that are required to be proficient of using Flamego to build web applications that are most optimal.
 
-## Classic Flame
+## 经典 Flame
 
 The classic Flame instance is the one that comes with a reasonable list of default middleware and could be your starting point for build web applications using Flamego.
 
@@ -47,7 +47,7 @@ func Classic() *Flame {
 Do keep in mind that `flamego.Classic` may not always be what you want if you do not use these default middleware (e.g. for using custom implementations), or to use different config options, or even just want to change the order of middleware as sometimes the order matters (i.e. middleware are being invoked in the same order as they are registered).
 :::
 
-## Instances
+## 实例
 
 The function [`flamego.New`](https://pkg.go.dev/github.com/flamego/flamego#New) is used to create bare Flame instances that do not have default middleware registered, and any type that contains the [`flamego.Flame`](https://pkg.go.dev/github.com/flamego/flamego#Flame) can be seen as a Flame instance.
 
@@ -72,7 +72,7 @@ Storing states in the way that is polluting global namespace is such a bad pract
 It feels so elegent to have isolated state managed by each Flame instance, and make it possible to migrate existing web applications to use Flamego progressively.
 :::
 
-## Handlers
+## 处理器
 
 Flamego handlers are defined as [`flamego.Hander`](https://pkg.go.dev/github.com/flamego/flamego#Handler), and if you look closer, it is just an empty interface (`interface{}`):
 
@@ -132,7 +132,7 @@ Respond from a method of a type
 :::
 ::::
 
-## Return values
+## 返回值
 
 Generally, your web application needs to write content directly to the [`http.ResponseWriter`](https://pkg.go.dev/net/http#ResponseWriter) (which you can retrieve using `ResponseWriter` method of [`flamego.Context`](https://pkg.go.dev/github.com/flamego/flamego#Context)). In some web frameworks, they offer returning an extra `error` as the indication of the server error as follows:
 
@@ -335,7 +335,7 @@ f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 
 Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
 
-::: tip 💡 Did you know?
+::: tip 💡 小贴士
 Global middleware are always invoked regardless whether a route is matched.
 :::
 

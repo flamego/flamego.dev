@@ -331,7 +331,7 @@ f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 
 Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
 
-::: tip 💡 Did you know?
+::: tip 💡 小贴士
 Global middleware are always invoked regardless whether a route is matched.
 :::
 

@@ -272,7 +272,7 @@ f.Get(..., func(c flamego.Context) {
 })
 ```
 
-::: tip 💡 Did you know?
+::: tip 💡 小贴士
 Not all handlers that are registered for a route are always being invoked, the request context (`flamego.Context`) stops invoking subsequent handlers [when the response status code has been written](https://github.com/flamego/flamego/blob/1114ba32a13be474a80a702fb3909ccd49250523/context.go#L201-L202) by the current handler. This is similar to how the [short circuit evaluation](https://en.wikipedia.org/wiki/Short-circuit_evaluation) works.
 :::
 
@@ -508,7 +508,7 @@ f.Use(flamego.Static(
 ))
 ```
 
-::: tip 💡 Did you know?
+::: tip 💡 小贴士
 The value of `Prefix` does not have to be the same as the value of `Directory`.
 :::
 
