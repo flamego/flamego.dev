@@ -4,21 +4,17 @@ prev:
   link: middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
+# 常见问题
 
-# FAQs
+## 如何修改监听地址？
 
-## How do I change the listen address?
-
-If you're using the `Run` method to start the web server, you may change the listen address using either the environment variable `FLAMEGO_ADDR`:
+通过 `Run` 方法启动的 Flame 实例可以通过环境变量 `FLAMEGO_ADDR` 来修改监听地址：
 
 ```sh:no-line-numbers
 export FLAMEGO_ADDR=localhost:8888
 ```
 
-Or the variable arguments of the `Run` method:
+或通过传递参数给 `Run` 方法：
 
 ```go:no-line-numbers
 f.Run("localhost")       // => localhost:2830
@@ -26,16 +22,16 @@ f.Run(8888)              // => 0.0.0.0:8888
 f.Run("localhost", 8888) // => localhost:8888
 ```
 
-Alternatively, [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe) or [`http.ListenAndServeTLS`](https://pkg.go.dev/net/http#ListenAndServeTLS) can also be used to change the listen address:
+或者直接使用 [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe) 或 [`http.ListenAndServeTLS`](https://pkg.go.dev/net/http#ListenAndServeTLS) 方法启动实例：
 
 ```go:no-line-numbers
 http.ListenAndServe("localhost:8888", f)
 http.ListenAndServeTLS("localhost:8888", "certFile", "keyFile", f)
 ```
 
-## How do I do graceful shutdown?
+## 如何实现优雅停机？
 
-The [github.com/ory/graceful](https://github.com/ory/graceful) package can be used to do graceful shutdown with the Flame instance:
+[github.com/ory/graceful](https://github.com/ory/graceful) 可被用于实现 Flame 实例的优雅停机：
 
 ```go:no-line-numbers
 package main
@@ -59,18 +55,18 @@ func main() {
 		},
 	)
 	if err := graceful.Graceful(server.ListenAndServe, server.Shutdown); err != nil {
-		// Handler error
+		// 处理错误
 	}
 }
 ```
 
-## How do I integrate into existing applications?
+## 如何集成到现有的 Web 应用？
 
-Because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface, a Flame instance can be plugged into anywhere that accepts a `http.Handler`.
+因为 Flame 实例实现了 [`http.Handler`](https://pkg.go.dev/net/http#Handler) 接口，所以可以被集成到任何接受 `http.Handler` 作为参数的地方。
 
-### Example: Integrating with `net/http`
+### 示例：与 `net/http` 集成
 
-Below is an example of integrating with the `net/http` router for a single route `"/user/info"`:
+下面展示了如何集成到 `net/http` 的路由系统中，并响应路径为 `"/user/info"` 的请求：
 
 :::: code-group
 ::: code-group-item Code
@@ -90,7 +86,7 @@ func main() {
 		return "The user is Joe"
 	})
 
-	// Pass on all routes under "/user/" to the Flame isntance
+	// 将所有以 "/user/" 开头的请求路径都交给 Flame 示例处理
 	http.Handle("/user/", f)
 
 	if err := http.ListenAndServe("0.0.0.0:2830", nil); err != nil {
@@ -107,9 +103,9 @@ The user is Joe
 :::
 ::::
 
-### Example: Integrating with Macaron
+### 示例：与 Macaron 集成
 
-Below is an example of integrating with the Macaron router for a single route `"/user/info"`:
+下面展示了如何集成到 Macaron 的路由系统中，并响应路径为 `"/user/info"` 的请求：
 
 :::: code-group
 ::: code-group-item Code
@@ -130,7 +126,7 @@ func main() {
 		return "The user is Joe"
 	})
 
-	// Pass on all routes under "/user/" to the Flame isntance
+	// 将所有以 "/user/" 开头的请求路径都交给 Flame 示例处理
 	m := macaron.New()
 	m.Any("/user/*", f.ServeHTTP)
 
@@ -148,26 +144,26 @@ The user is Joe
 :::
 ::::
 
-## What is the difference between `inject.Invoker` and `inject.FastInvoker`?
+## `inject.Invoker` 和 `inject.FastInvoker` 有什么区别？
 
-The [`inject.Invoker`](https://pkg.go.dev/github.com/flamego/flamego/inject#Invoker) is the default way that the Flame instance uses to invoke a function through reflection.
+[`inject.Invoker`](https://pkg.go.dev/github.com/flamego/flamego/inject#Invoker) 是 Flame 实例通过反射调用函数的实现形式。
 
-In 2016, [@tupunco](https://github.com/tupunco) [contributed a patch](https://github.com/go-macaron/inject/commit/07e997cf1c187f573791bd7680cfdcba43161c22) with the concept and the implementation of the [`inject.FastInvoker`](https://pkg.go.dev/github.com/flamego/flamego/inject#FastInvoker), which invokes a function through interface. The `inject.FastInvoker` is about 30% faster to invoke a function and uses less memory.
+在 2016 年，[@tupunco](https://github.com/tupunco) [提出并贡献了](https://github.com/go-macaron/inject/commit/07e997cf1c187f573791bd7680cfdcba43161c22) [`inject.FastInvoker`](https://pkg.go.dev/github.com/flamego/flamego/inject#FastInvoker) 的最初实现，即通过实现接口的形式实现函数调用，提升了大约 30% 的调用性能，并且降低了运行时的内存消耗。
 
-## What is the idea behind this other than Macaron/Martini?
+## 和 Macaron/Martini 的关系是什么？
 
-Martini brought the brilliant idea of build a web framework with dependency injection in a magical experience. However, it has terrible performance and high memory usage. Some people are blaming the use of reflection for its slowness and memory footprint, but that is not fair by the way, most of people are using reflections every single day with marshalling and unmarshalling JSON in Go.
+Martini 是 Go 语言中依赖注入型 Web 框架的鼻祖，开创了一个全新的流派。但受限于原作者的实现细节，它的性能和内存消耗都非常不尽如人意。很多人将性能原因归咎于反射并嗤之以鼻，但我觉得这纯属无脑喷，标准库的 JSON 实现用的就是反射，这么多 Go 语言实现的应用还不是用的开开心心？
 
-Macaron achieved the reasonable performance and much lower memory usage. Unfortunately, it was not a properly designed product, or let's be honest, there was no design. The origin of Macaron was to support the rapid development of the [Gogs](https://gogs.io) project, thus almost all things were inherited from some other web frameworks at the time.
+Macaron 秉承了相同的理念，通过更好的实现细节提升了可观的性能并大幅降低了内存占用。遗憾的是，当时只是作为 [Gogs](https://gogs.io) 项目的衍生品，所以没有好好进行设计，或者干脆点说，当时根本就没什么设计思想。所有的功能当时都只是为了支持项目的快速开发。
 
-Absence of holistic architecture view and design principles have caused many bad decisions, including but not limited to:
+缺乏整体架构和设计原则的思考导致了许多回头来看非常错误的决定，包括但不限于：
 
-- The [`*macaron.Context`](https://pkg.go.dev/github.com/go-macaron/macaron#Context) is very heavy, thus [separation of concerns](https://en.wikipedia.org/wiki/Separation_of_concerns) wasn't a thing.
-- The choice of using the opening-only style (e.g. `:name`) for [named parameters](https://go-macaron.com/middlewares/routing#named-parameters) has limited capability and extensibility of the routing syntax.
-- Being too opinionated in many aspects, a simple example is the existence of [`SetConfig`](https://pkg.go.dev/github.com/go-macaron/macaron#SetConfig)/[`Config`](https://pkg.go.dev/github.com/go-macaron/macaron#Config) that kinda kidnaps all users to import the package `"gopkg.in/ini.v1"` but not using it at 99% of the time.
-- The way to [set a cookie](https://go-macaron.com/core_services#cookie) is a disaster.
+- [`*macaron.Context`](https://pkg.go.dev/github.com/go-macaron/macaron#Context) 包含了过多的内容，完全没有[职责分离](https://en.wikipedia.org/wiki/Separation_of_concerns)可言
+- [命名参数](https://go-macaron.com/middlewares/routing#named-parameters)的语法选择也非常的落后，即使用冒号表达（如 `:name`），这从根本上杜绝了路由配置语法的可扩展性
+- 一些过于自以为是的决定，比如 [`SetConfig`](https://pkg.go.dev/github.com/go-macaron/macaron#SetConfig) 和 [`Config`](https://pkg.go.dev/github.com/go-macaron/macaron#Config) 就导致强行捆绑用户引入 `"gopkg.in/ini.v1"` 这样的在 99% 的情况下都用不到的额外依赖
+- [设定 Cookie 的方式](https://go-macaron.com/core_services#cookie)完全就是纯脑残
 
-All in all, Macaron is still an excellent web framework, and Flamego is just better as the successor. 🙂
+总而言之，我始终认为 Macaron 是一款非常牛逼的 Web 框架，只不过 Flamego 作为继任者而言会更加牛逼 🙂
 
 ## 为什么默认端口是 2830？
 
