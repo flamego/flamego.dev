@@ -1,6 +1,6 @@
 ---
 prev:
-  text: Middleware
+  text: 中间件集成
   link: middleware
 ---
 
