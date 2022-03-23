@@ -13,11 +13,11 @@ next:
 
 # 路由配置
 
-Every request goes through the routing in order to reach its handlers, that is how important the routing is to be ergonomic. Flamego spends great amount of effort on designing and implementing the routing capability and future extensibility to ensure your developer happiness.
+每一个来自客户端的请求都会经过路由系统，因此路由系统的易用性对于一个 Web 框架来说是至关重要的。Flamego 在路由系统的设计和实现上花费了大量精力，在确保易用性的同时保留了未来的可扩展性。
 
-In Flamego, a route is an HTTP method paired with a URL-matching pattern, and each route takes _a chain of handlers_.
+路由是指 HTTP 请求方法和 URL 匹配模式的组合，并且每个路由都可以绑定多个处理器。
 
-Below are the helpers to register routes for each HTTP method:
+下面列举了对应不同 HTTP 请求的辅助方法：
 
 ```go:no-line-numbers
 f.Get("/", ...)
@@ -31,38 +31,38 @@ f.Connect("/", ...)
 f.Trace("/", ...)
 ```
 
-If you want to match all HTTP methods for a single route, `Any` is available for you:
+`Any` 方法可以将单个路由与所有 HTTP 请求方法进行组合：
 
 ```go:no-line-numbers
 f.Any("/", ...)
 ```
 
-When you want to match a selected list of HTTP methods for a single route, `Routes` is your friend:
+当你需要将单个路由与多个 HTTP 请求方法进行组合时，则可以使用 `Routes` 方法：
 
 ```go:no-line-numbers
 f.Routes("/", "GET,POST", ...)
 ```
 
-## Terminology
+## 术语
 
-- A **URL path segment** is the portion between two forward slashes, e.g. `/<segment>/`, the trailing forward slash may not present.
-- A **bind parameter** uses curly brackets (`{}`) as its notation, e.g. `{<bind_parameter>}`, bind parameters are only available in [dynamic routes](#dynamic-routes).
+- **URL 路径块**是指介于两个斜杠之间的部分，如 `/<segment>/`，且尾部的斜杠可以被省略
+- **绑定参数** 使用花括号（`{}`）进行表示，并仅限用于[动态路由](#动态路由)
 
-## Static routes
+## 静态路由
 
-The static routes are probably the most common routes you have been seeing and using, routes are defined in literals and only looking for _exact matches_:
+静态路由是 Web 应用中最为常见的一种路由，即要求客户端的请求路径与配置的路径完整一致才能被匹配：
 
 ```go:no-line-numbers
 f.Get("/user", ...)
 f.Get("/repo", ...)
 ```
 
-In the above example, any request that is not a GET request to `/user` or `/repo` will result in 404.
+上例中，任何不为 `/user` 或 `/repo` 的请求路径都将收到 404。
 
 ::: warning
-Unlike the router in `net/http`, where you may use `/user/` to match all subpaths under the `/user` path, it is still a static route in Flamego, and only matches a route IFF the request path is exactly the `/user/`.
+标准库的 `net/http` 允许用户使用 `/user/` 来匹配所有以 `/user` 开头的请求路径，但在 Flamego 中这仍旧只是一个单纯的静态路由，所以要求客户端的请求路径与 `/user/` 完全一致才能被匹配。
 
-Let's write an example:
+来看个例子就明白了：
 
 ```go:no-line-numbers
 package main
@@ -80,7 +80,7 @@ func main() {
 }
 ```
 
-Then run some tests as follows:
+运行如下测试：
 
 ```:no-line-numbers
 $ curl http://localhost:2830/user
@@ -94,22 +94,22 @@ $ curl http://localhost:2830/user/info
 ```
 :::
 
-## Dynamic routes
+## 动态路由
 
-The dynamic routes, by its name, they match request paths dynamically. Flamego provides most powerful dynamic routes in the Go ecosystem, at the time of writing, there is simply no feature parity you can find in all other existing Go web frameworks.
+顾名思义，动态路由指的是可以进行动态匹配的路由配置。在撰写本文档时，Flamego 的动态路由在整个 Go 语言生态中依然首屈一指，无人望其项背。
 
-The `flamego.Context` provides a family of `Param` methods to access values that are captured by bind parameters, including:
+`flamego.Context` 提供了一系列的辅助方法来获取动态路由中的绑定参数，包括：
 
-- `Params` returns all bind parameters.
-- `Param` returns value of the given bind parameter.
-- `ParamInt` returns value parsed as int.
-- `ParamInt64` returns value parsed as int64.
+- `Params` 返回所有的绑定参数
+- `Param` 返回指定的绑定参数值
+- `ParamInt` 返回解析为 `int` 类型的绑定参数值
+- `ParamInt64` 返回解析为 `int64` 类型的绑定参数值
 
-### Placeholders
+### 占位符
 
-A placeholder captures anything but a forward slash (`/`), and you may have one or more placeholders within a URL path segment.
+占位符可以用于匹配除了斜杠（`/`）以外的所有字符，并且在单个 URL 路径块中可以使用任意多个占位符。
 
-Below are all valid usages of placeholders:
+下面列举了一些占位符的用法：
 
 ```go
 f.Get("/users/{name}", ...)
@@ -117,16 +117,16 @@ f.Get("/posts/{year}-{month}-{day}.html", ...)
 f.Get("/geo/{state}/{city}", ...)
 ```
 
-On line 1, the placeholder named `{name}` to capture everything in a URL path segment.
+在第 1 行，名为 `{name}` 的占位符会匹配整个 URL 路径块。
 
-On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture different portions in a URL path segment.
+在第 2 行，`{year}`、`{month}` 和 `{day}` 这三个占位符会分别匹配 URL 路径块的三个部分。
 
-On line 3, two placeholders are used independently in different URL path segments.
+在第 3 行，两个占位符由于在不同的 URL 路径块中，因此相互独立不受影响。
 
-Let's see some examples:
+再来一些完整的例子：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -174,14 +174,14 @@ Welcome to Boston, MA!
 ::::
 
 ::: tip
-Try a test request using `curl http://localhost:2830/posts/2021-11-abc.html` and see what changes.
+尝试执行 `curl http://localhost:2830/posts/2021-11-abc.html` 并观察输出的变化。
 :::
 
-### Regular expressions
+### 正则表达式
 
-A bind parameter can be defined with a custom regular expression to capture characters in a URL path segment, and you may have one or more such bind parameters within a URL path segment. The regular expressions are needed to be surrounded by a pair of forward slashes (`/<regexp>/`).
+正则表达式可以被用来进一步限定绑定参数的匹配规则，并使用斜杠进行表示，如 `/<regexp>/`。
 
-Below are all valid usages of bind parameters with regular expressions:
+下面列举了一些使用正则表达式定义的绑定参数：
 
 ```go
 f.Get("/users/{name: /[a-zA-Z0-9]+/}", ...)
@@ -189,24 +189,24 @@ f.Get("/posts/{year: /[0-9]{4}/}-{month: /[0-9]{2}/}-{day: /[0-9]{2}/}.html", ..
 f.Get("/geo/{state: /[A-Z]{2}/}/{city}", ...)
 ```
 
-On line 1, the placeholder named `{name}` to capture everything in a URL path segment.
+在第 1 行，名为 `{name}` 的占位符会匹配整个 URL 路径块中的字母和数字。
 
-On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture different portions in a URL path segment.
+在第 2 行，`{year}`、`{month}` 和 `{day}` 这三个占位符会分别匹配 URL 路径块中具有特定长度的数字。
 
-On line 3, two placeholders are used independently in different URL path segments.
+在第 3 行，`{state}` 仅会匹配长度为 2 的大写字母。
 
 ::: tip
-Because forward slashes are used to indicate the use of regular expressions, they cannot be captured via regular expressions, and will cause a routing parser error when you are trying to do so:
+由于正则表达式自身是通过斜杠进行表示的，因此它们匹配规则不可以包含斜杠：
 
 ```:no-line-numbers
 panic: unable to parse route "/{name: /abc\\//}": 1:15: unexpected token "/" (expected "}")
 ```
 :::
 
-Let's see some examples:
+再来一些完整的例子：
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -260,7 +260,7 @@ Welcome to Boston, MA!
 ::::
 
 ::: tip
-Try doing following test requests and see what changes:
+尝试运行以下测试并观察输出的变化：
 
 ```:no-line-numbers
 $ curl http://localhost:2830/users/logan-smith
@@ -269,7 +269,7 @@ $ curl http://localhost:2830/geo/ma/boston
 ```
 :::
 
-### Globs
+### 通配符
 
 A bind parameter can be defined with globs to capture characters across URL path segments (including forward slashes). The only notation for the globs is `**` and allows an optional argument `capture` to define how many URL path segments to capture _at most_.
 
@@ -290,7 +290,7 @@ On line 3, the glob captures at most two URL path segments under the `/geo/` pat
 Let's see some examples:
 
 :::: code-group
-::: code-group-item Code
+::: code-group-item 代码
 ```go:no-line-numbers
 package main
 
@@ -342,7 +342,7 @@ Welcome to Boston, MA!
 ::::
 
 ::: tip
-Try doing following test requests and see what changes:
+尝试运行以下测试并观察输出的变化：
 
 ```:no-line-numbers
 $ curl http://localhost:2830/webhooks/flamego/flamego
@@ -350,7 +350,7 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 ```
 :::
 
-## Combo routes
+## 组合路由
 
 The `Combo` method can create combo routes when you have different handlers for different HTTP methods of the same route:
 
@@ -358,7 +358,7 @@ The `Combo` method can create combo routes when you have different handlers for 
 f.Combo("/").Get(...).Post(...)
 ```
 
-## Group routes
+## 组路由
 
 Organizing routes in groups not only help code readability, but also encourages code reuse in terms of shared middleware.
 
@@ -398,7 +398,7 @@ f.Group("/user", func() {
 
 Yes!
 
-## Optional routes
+## 可选路由
 
 Optional routes may be used for both static and dynamic routes, and use question mark (`?`) as the notation:
 
@@ -420,7 +420,7 @@ f.Get("/users/{name}", ...)
 The optional routes can only be used for the last URL path segment.
 :::
 
-## Matching priority
+## 匹配优先级
 
 When your web application grows large enough, you'll start to want to make sense of which route gets matched at when. This is where the matching priority comes into play.
 
@@ -434,7 +434,7 @@ Here is the breakdown:
 1. Dynamic routes with globs in the middle, e.g. `/users/{**}/events`.
 1. Dynamic routes with globs in the end, e.g. `/users/{**}`.
 
-## Constructing URL paths
+## 构建 URL 路径
 
 The URL path can be constructed using the `URLPath` method if you give the corresponding route a name, which helps prevent URL paths are getting out of sync spread across your codebase:
 
@@ -449,7 +449,7 @@ f.Get(..., func(c flamego.Context) {
 })
 ```
 
-## Customizing the `NotFound` handler
+## 自定义 `NotFound` 处理器
 
 By default, the [`http.NotFound`](https://pkg.go.dev/net/http#NotFound) is invoked for 404 pages, you can customize the behavior using the `NotFound` method:
 
@@ -459,7 +459,7 @@ f.NotFound(func() string {
 })
 ```
 
-## Auto-registering `HEAD` method
+## 自动注册 `HEAD` 方法
 
 By default, only GET requests is accepted when using the `Get` method to register a route, but it is not uncommon to allow HEAD requests to your web application.
 

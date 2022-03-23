@@ -185,11 +185,11 @@ f.Get("/posts/{year: /[0-9]{4}/}-{month: /[0-9]{2}/}-{day: /[0-9]{2}/}.html", ..
 f.Get("/geo/{state: /[A-Z]{2}/}/{city}", ...)
 ```
 
-On line 1, the placeholder named `{name}` to capture everything in a URL path segment.
+On line 1, the placeholder named `{name}` to capture any alphanumeric in a URL path segment.
 
-On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture different portions in a URL path segment.
+On line 2, three placeholders `{year}`, `{month}` and `{day}` are used to capture certain length of digits in different portions in a URL path segment.
 
-On line 3, two placeholders are used independently in different URL path segments.
+On line 3, the placeholder `state` will only match two-digit and upper-case alphabets.
 
 ::: tip
 Because forward slashes are used to indicate the use of regular expressions, they cannot be captured via regular expressions, and will cause a routing parser error when you are trying to do so:
