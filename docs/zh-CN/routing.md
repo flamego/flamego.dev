@@ -7,10 +7,6 @@ next:
   link: middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 路由配置
 
 每一个来自客户端的请求都会经过路由系统，因此路由系统的易用性对于一个 Web 框架来说是至关重要的。Flamego 在路由系统的设计和实现上花费了大量精力，在确保易用性的同时保留了未来的可扩展性。
@@ -123,7 +119,7 @@ f.Get("/geo/{state}/{city}", ...)
 
 在第 3 行，两个占位符由于在不同的 URL 路径块中，因此相互独立不受影响。
 
-再来一些完整的例子：
+来看几个完整的例子：
 
 :::: code-group
 ::: code-group-item 代码
@@ -203,7 +199,7 @@ panic: unable to parse route "/{name: /abc\\//}": 1:15: unexpected token "/" (ex
 ```
 :::
 
-再来一些完整的例子：
+来看几个完整的例子：
 
 :::: code-group
 ::: code-group-item 代码
@@ -271,23 +267,23 @@ $ curl http://localhost:2830/geo/ma/boston
 
 ### 通配符
 
-A bind parameter can be defined with globs to capture characters across URL path segments (including forward slashes). The only notation for the globs is `**` and allows an optional argument `capture` to define how many URL path segments to capture _at most_.
+使用通配符定义的绑定参数可以匹配多个 URL 路径块（包括斜杠）。通配符使用 `**` 进行表示，并接受一个可选参数 `capture` 用于设定最多可匹配 URL 路径块的数量。
 
-Below are all valid usages of bind parameters with globs:
+下面列举了一些使用通配符定义的绑定参数：
 
 ```go
-f.Get("/posts/{**}", ...) // A shorthand for "{**: **}"
+f.Get("/posts/{**}", ...) // "{**: **}" 的语法糖
 f.Get("/webhooks/{repo: **}/events", ...)
 f.Get("/geo/{**: **, capture: 2}", ...)
 ```
 
-On line 1, the glob captures everything under the `/posts/` path.
+在第 1 行，通配符会匹配所有以 `/posts/` 开头的路径。
 
-On line 2, the glob captures everything in between a path starts with `/webhooks/` and ends with `/events`.
+在第 2 行，通配符会匹配所有以 `/webhooks/` 开头并以 `/events` 结尾的路径。
 
-On line 3, the glob captures at most two URL path segments under the `/geo/` path.
+在第 3 行，通配符会匹配所有以 `/geo/` 开头的路径，但最多匹配 2 个 URL 路径块。
 
-Let's see some examples:
+来看几个完整的例子：
 
 :::: code-group
 ::: code-group-item 代码
@@ -352,7 +348,7 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 
 ## 组合路由
 
-The `Combo` method can create combo routes when you have different handlers for different HTTP methods of the same route:
+当不同的 HTTP 方法需要与相同的一个路由进行组合时，可以使用 `Combo` 方法进行简写：
 
 ```go:no-line-numbers
 f.Combo("/").Get(...).Post(...)
@@ -360,9 +356,7 @@ f.Combo("/").Get(...).Post(...)
 
 ## 组路由
 
-Organizing routes in groups not only help code readability, but also encourages code reuse in terms of shared middleware.
-
-It is as easy as wrapping your routes with the `Group` method, and there is no limit on how many level of nestings you may have:
+通过分组的方式对路由进行管理可以有效提升代码的可读性和中间件的复用。使用 `Group` 方法将可以将多个路由进行分组，分组内还可以嵌套更多的分组，并且嵌套的层数是没有限制的：
 
 ```go{4}
 f.Group("/user", func() {
@@ -374,7 +368,7 @@ f.Group("/user", func() {
 }, middleware1, middleware2)
 ```
 
-The line 4 in the above example may seem unusual to you, but that is not a mistake! The equivalent version of it is as follows:
+在第 4 行的路径使用了空字符串，这是完全合法的使用方法，其等价于下面的配置：
 
 ```go:no-line-numbers
 f.Get("/user/settings", ...)
@@ -382,9 +376,9 @@ f.Get("/user/settings", ...)
 
 ![how does that work](https://media0.giphy.com/media/2gUHK3J2NCMsqsz1su/200w.webp?cid=ecf05e47d3syetfd9ja7nr3qwjfdrs4mnhjh46xq1numt01p&rid=200w.webp&ct=g)
 
-That's because the Flamego router uses [string concatenation to combine group routes](https://github.com/flamego/flamego/blob/503ddd0f43a7281b5d334173aba5e32de2d2b31f/router.go#L201-L205).
+这是因为 Flamego 的路由系统对组路由内的子路由使用[字符串拼接的方式来计算最终路径](https://github.com/flamego/flamego/blob/503ddd0f43a7281b5d334173aba5e32de2d2b31f/router.go#L201-L205)。
 
-Huh, so this also works?
+因此，下面用法也是合法的：
 
 ```go:no-line-numbers{3-5}
 f.Group("/user", func() {
@@ -396,18 +390,16 @@ f.Group("/user", func() {
 }, middleware1, middleware2)
 ```
 
-Yes!
-
 ## 可选路由
 
-Optional routes may be used for both static and dynamic routes, and use question mark (`?`) as the notation:
+静态路由和动态路由均可被配置成可选路由，其使用问号（`?`）进行表示：
 
 ```go:no-line-numbers
 f.Get("/user/?settings", ...)
 f.Get("/users/?{name}", ...)
 ```
 
-The above example is essentially a shorthand for the following:
+上面的用法等价的配置如下：
 
 ```go:no-line-numbers
 f.Get("/user", ...)
@@ -417,26 +409,24 @@ f.Get("/users/{name}", ...)
 ```
 
 ::: warning
-The optional routes can only be used for the last URL path segment.
+可选路由只可被用于匹配最后一个 URL 路径块，并仅限在单个路由上配置一次。
 :::
 
 ## 匹配优先级
 
-When your web application grows large enough, you'll start to want to make sense of which route gets matched at when. This is where the matching priority comes into play.
+随着 Web 应用的复杂化，配置的路由也会越来越多，此时对于路由之间匹配优先级的理解就显得至关重要。
 
-The matching priority is based on different URL-matching patterns, the matching scope (the narrower scope has the higher priority), and the order of registration.
+匹配优先级是基于不同的 URL 匹配模式、匹配范围（范围越小优先级越高）和注册顺序决定的，具体如下：
 
-Here is the breakdown:
-
-1. Static routes are always being matched first, e.g. `/users/settings`.
-1. Dynamic routes with placeholders not capturing everything, e.g. `/users/{name}.html`
-1. Dynamic routes with single placeholder captures everything, e.g. `/users/{name}`.
-1. Dynamic routes with globs in the middle, e.g. `/users/{**}/events`.
-1. Dynamic routes with globs in the end, e.g. `/users/{**}`.
+1. 静态路由总是被优先匹配，如 `/users/settings`
+1. 不匹配整个 URL 路径块的占位符，如 `/users/{name}.html`
+1. 匹配整个 URL 路径块的占位符，如 `/users/{name}`.
+1. 匹配中间路径的通配符，如 `/users/{**}/events`.
+1. 匹配剩余路径的通配符，如 `/users/{**}`.
 
 ## 构建 URL 路径
 
-The URL path can be constructed using the `URLPath` method if you give the corresponding route a name, which helps prevent URL paths are getting out of sync spread across your codebase:
+`URLPath` 方法可以根据路由的名称构建其完整的路径：
 
 ```go:no-line-numbers
 f.Get("/user/?settings", ...).Name("UserSettings")
@@ -451,7 +441,7 @@ f.Get(..., func(c flamego.Context) {
 
 ## 自定义 `NotFound` 处理器
 
-By default, the [`http.NotFound`](https://pkg.go.dev/net/http#NotFound) is invoked for 404 pages, you can customize the behavior using the `NotFound` method:
+默认情况下，[`http.NotFound`](https://pkg.go.dev/net/http#NotFound) 函数会被用于响应 404 状态码的页面，但可以通过 `NotFound` 方法进行自定义：
 
 ```go:no-line-numbers
 f.NotFound(func() string {
@@ -461,9 +451,9 @@ f.NotFound(func() string {
 
 ## 自动注册 `HEAD` 方法
 
-By default, only GET requests is accepted when using the `Get` method to register a route, but it is not uncommon to allow HEAD requests to your web application.
+默认情况下，使用 `Get` 方法注册的路由只会接受 HTTP GET 方法的请求，但部分 Web 应用可能会希望同时支持 HEAD 请求。
 
-The `AutoHead` method can automatically register HEAD method with same chain of handlers to the same route whenever a GET method is registered:
+调用 `AutoHead` 方法可以在注册任意路由的 GET 方法的处理器时，自动为该路由的 HEAD 方法也注册相同的处理器：
 
 ```go:no-line-numbers
 f.Get("/without-head", ...)
@@ -471,6 +461,6 @@ f.AutoHead(true)
 f.Get("/with-head", ...)
 ```
 
-Please note that only routes that are registered after call of the `AutoHead(true)` method will be affected, existing routes remain unchanged.
+需要注意的是，该行为仅会在调用 `AutoHead(true)` 之后的路由配置生效，并不会影响已经配置好的路由。
 
-In the above example, only GET requests are accepted for the `/without-head` path. Both GET and HEAD requests are accepted for the `/with-head` path.
+如上例中，`/with-head` 路径同时接受 GET 和 HEAD 请求，而 `/without-head` 路径仅接受 GET 请求。
