@@ -4,41 +4,37 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # binding
 
-The binding middleware provides request data binding and validation for [Flame instances](../core-concepts.md#instances), including Form, Multipart Form, JSON and YAML formats.
+binding 中间件为 [Flame 实例](../core-concepts.md#实例) 提供请求数据绑定和验证服务，支持的数据格式包括 Form、Multipart Form、JSON 和 YAML。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/binding) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/binding?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/binding) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/binding?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/binding
 ```
 
-## Usage examples
+## 用法示例
 
 ::: tip
-Examples included in this section is to demonstrate the usage of the binding middleware, please refer to the documentation of [`validator`](https://pkg.go.dev/github.com/flamego/validator) package for validation syntax and constraints.
+本小结仅展示 binding 中间件的相关用法，如需了解验证模块的用法请移步 [`validator`](https://pkg.go.dev/github.com/flamego/validator) 的文档。
 :::
 
-The type of binding object is injected into the request context and the special data type [`binding.Errors`](https://pkg.go.dev/github.com/flamego/binding#Errors) is provided to indicate any errors occurred in binding and/or validation phases.
+绑定对象自身会被注入到请求上下文中以供后续的处理器使用，并额外提供 [`binding.Errors`](https://pkg.go.dev/github.com/flamego/binding#Errors) 用于错误传递。
 
-::: warning
-Pointers is prohibited be passed as the binding object to prevent side effects, and to make sure every handler gets a fresh copy of the object on every request.
+::: danger
+禁止传递绑定对象的指针以确保每个处理器都能够获得对象的全新副本，以及避免潜在的副作用而导致的意外错误。
 :::
 
 ### Form
 
-The [`binding.Form`](https://pkg.go.dev/github.com/flamego/binding#Form) takes a binding object and parses the request payload encoded as `application/x-www-form-urlencoded`, a [`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) can be used to further customize the behavior of the function.
+[`binding.Form`](https://pkg.go.dev/github.com/flamego/binding#Form) 会将请求数据以 `application/x-www-form-urlencoded` 的编码格式将其解析到绑定对象上，[`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) 可以被用于配置该函数的行为。
 
-The `form` struct tag should be used to indicate the binding relations between the payload and the object:
+绑定对象内的字段需要使用结构体标签 `form` 来表示与请求数据之间的绑定关系：
 
 :::: code-group
 ::: code-group-item main.go
@@ -125,9 +121,9 @@ func main() {
 
 ### Multipart Form
 
-The [`binding.MultipartForm`](https://pkg.go.dev/github.com/flamego/binding#MultipartForm) takes a binding object and parses the request payload encoded as `multipart/form-data`, a [`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) can be used to further customize the behavior of the function.
+[`binding.MultipartForm`](https://pkg.go.dev/github.com/flamego/binding#MultipartForm)  会将请求数据以 `multipart/form-data` 的编码格式将其解析到绑定对象上，[`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) 可以被用于配置该函数的行为。
 
-The `form` struct tag should be used to indicate the binding relations between the payload and the object, and [`*multipart.FileHeader`](https://pkg.go.dev/mime/multipart#FileHeader) should be type of the field that you're going to store the uploaded content:
+绑定对象内的字段需要使用结构体标签 `form` 来表示与请求数据之间的绑定关系，用于存储上传文件的字段则必须声明为 [`*multipart.FileHeader`](https://pkg.go.dev/mime/multipart#FileHeader) 类型：
 
 :::: code-group
 ::: code-group-item main.go
@@ -201,9 +197,9 @@ func main() {
 
 ### JSON
 
-The [`binding.JSON`](https://pkg.go.dev/github.com/flamego/binding#JSON) takes a binding object and parses the request payload encoded as `application/json`, a [`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) can be used to further customize the behavior of the function.
+[`binding.JSON`](https://pkg.go.dev/github.com/flamego/binding#JSON) 会将请求数据以 `application/json` 的编码格式将其解析到绑定对象上，[`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) 可以被用于配置该函数的行为。
 
-The `json` struct tag should be used to indicate the binding relations between the payload and the object:
+绑定对象内的字段需要使用结构体标签 `json` 来表示与请求数据之间的绑定关系：
 
 ```go:no-line-numbers
 package main
@@ -257,9 +253,9 @@ func main() {
 
 ### YAML
 
-The [`binding.YAML`](https://pkg.go.dev/github.com/flamego/binding#YAML) takes a binding object and parses the request payload encoded as `application/yaml`, a [`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) can be used to further customize the behavior of the function.
+[`binding.YAML`](https://pkg.go.dev/github.com/flamego/binding#YAML) 会将请求数据以 `application/yaml` 的编码格式将其解析到绑定对象上，[`binding.Options`](https://pkg.go.dev/github.com/flamego/binding#Options) 可以被用于配置该函数的行为。
 
-The `yaml` struct tag should be used to indicate the binding relations between the payload and the object:
+绑定对象内的字段需要使用结构体标签 `yaml` 来表示与请求数据之间的绑定关系：
 
 ```go:no-line-numbers
 package main

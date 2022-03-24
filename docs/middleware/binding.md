@@ -26,7 +26,7 @@ Examples included in this section is to demonstrate the usage of the binding mid
 
 The type of binding object is injected into the request context and the special data type [`binding.Errors`](https://pkg.go.dev/github.com/flamego/binding#Errors) is provided to indicate any errors occurred in binding and/or validation phases.
 
-::: warning
+::: danger
 Pointers is prohibited be passed as the binding object to prevent side effects, and to make sure every handler gets a fresh copy of the object on every request.
 :::
 
