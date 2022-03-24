@@ -18,7 +18,7 @@ Go 语言的最低版本要求为 **1.16**。
 go get github.com/flamego/hcaptcha
 ```
 
-## Usage examples
+## 用法示例
 
 ::: warning
 本小结仅展示 hcaptcha 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。

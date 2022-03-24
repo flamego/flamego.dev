@@ -4,33 +4,29 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # recaptcha
 
-The recaptcha middleware provides [Google reCAPTCHA](https://www.google.com/recaptcha/about/) integration for [Flame instances](../core-concepts.md#instances).
+recaptcha 中间件为 [Flame 实例](../core-concepts.md#实例)提供 [Google reCAPTCHA](https://www.google.com/recaptcha/about/) 验证服务的集成。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/recaptcha) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/recaptcha?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/recaptcha) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/recaptcha?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/recaptcha
 ```
 
-## Usage examples
+## 用法示例
 
 ::: warning
-Examples included in this section is to demonstrate the usage of the recaptcha middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
+本小结仅展示 recaptcha 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 
 ### reCAPTCHA v3
 
-The [`recaptcha.V3`](https://pkg.go.dev/github.com/flamego/recaptcha#V3) is used in combination with [`recaptcha.Options`](https://pkg.go.dev/github.com/flamego/recaptcha#Options) for [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3) integration, and the `recaptcha.RecaptchaV3.Verify` should be used to verify response tokens:
+[`recaptcha.V3`](https://pkg.go.dev/github.com/flamego/recaptcha#V3) 可以配合 [`recaptcha.Options`](https://pkg.go.dev/github.com/flamego/recaptcha#Options) 用于集成 [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3)，并使用 `recaptcha.RecaptchaV3.Verify` 来进行验证码的校验：
 
 :::: code-group
 ::: code-group-item main.go
@@ -102,13 +98,13 @@ func main() {
 :::
 ::::
 
-Because reCAPTCHA v3 is non-interruptive, you will not see any captcha image in the browser.
+因为 reCAPTCHA v3 采用非侵入式的校验方式，所以不会在网页中看到任何验证码。
 
 ### reCAPTCHA v2
 
-The [`recaptcha.V2`](https://pkg.go.dev/github.com/flamego/recaptcha#V2) is used in combination with [`recaptcha.Options`](https://pkg.go.dev/github.com/flamego/recaptcha#Options) for [reCAPTCHA v2](https://developers.google.com/recaptcha/docs/display) integration, and the `recaptcha.RecaptchaV2.Verify` should be used to verify response tokens.
+[`recaptcha.V2`](https://pkg.go.dev/github.com/flamego/recaptcha#V2) 可以配合 [`recaptcha.Options`](https://pkg.go.dev/github.com/flamego/recaptcha#Options) 用于集成 [reCAPTCHA v2](https://developers.google.com/recaptcha/docs/display)，并使用 `recaptcha.RecaptchaV2.Verify` 来进行验证码的校验。
 
-The following example is using the **"I'm not a robot" Checkbox** type of challenge:
+下面的例子才采用了 **"I'm not a robot" Checkbox** 类型的校验形式：
 
 :::: code-group
 ::: code-group-item main.go
@@ -173,6 +169,6 @@ func main() {
 :::
 ::::
 
-Below is how it would look like in your browser for the above example:
+下图为程序运行时浏览器中所展示的内容：
 
 ![Form with reCAPTCHA](https://user-images.githubusercontent.com/2946214/158651864-1cd14d53-9a41-496f-a2e3-f3e03ac305d1.png)
