@@ -4,29 +4,25 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # cache
 
-The cache middleware provides cache data management for [Flame instances](../core-concepts.md#instances), supporting various storage backends, including memory, file, PostgreSQL, MySQL, Redis and MongoDB.
+cache 中间件为 [Flame 实例](../core-concepts.md#实例) 提供缓存数据管理服务，支持的存储后端包括内存、文件系统、PostgreSQL、MySQL、Redis 和 MongoDB。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/cache) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/cache?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/cache) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/cache?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/cache
 ```
 
-## Storage backends
+## 存储后端
 
-### Memory
+### 内存
 
-The [`cache.Cacher`](https://pkg.go.dev/github.com/flamego/cache#Cacher) works out-of-the-box with an optional [`cache.Options`](https://pkg.go.dev/github.com/flamego/cache#Options) and uses memory as the storage backend:
+[`cache.Cacher`](https://pkg.go.dev/github.com/flamego/cache#Cacher) 可以配合 [`cache.Options`](https://pkg.go.dev/github.com/flamego/cache#Options) 对中间件进行配置，并默认使用内存作为存储后端：
 
 ```go:no-line-numbers
 package main
@@ -61,11 +57,11 @@ func main() {
 }
 ```
 
-Because the memory is volatile, cache data do not survive over restarts. Choose other storage backends if you need to persist cache data.
+由于数据存储在内存中，因此会在应用退出后被清除。如需持久化缓存数据，请选择其它存储后端。
 
 ### File
 
-The [`cache.FileIniter`](https://pkg.go.dev/github.com/flamego/cache#FileIniter) is the function to initialize a file storage backend, used together with [`cache.FileConfig`](https://pkg.go.dev/github.com/flamego/cache#FileConfig) to customize the backend:
+[`cache.FileIniter`](https://pkg.go.dev/github.com/flamego/cache#FileIniter) 是文件系统存储后端的初始化函数，并可以配合 [`cache.FileConfig`](https://pkg.go.dev/github.com/flamego/cache#FileConfig) 对其进行配置：
 
 ```go:no-line-numbers{16-21}
 package main
@@ -111,7 +107,7 @@ func main() {
 
 ### PostgreSQL
 
-The [`postgres.Initer`](https://pkg.go.dev/github.com/flamego/cache/postgres#Initer) is the function to initialize a PostgreSQL storage backend, used together with [`postgres.Config`](https://pkg.go.dev/github.com/flamego/cache/postgres#Config) to customize the backend:
+[`postgres.Initer`](https://pkg.go.dev/github.com/flamego/cache/postgres#Initer) 是 PostgreSQL 存储后端的初始化函数，并可以配合 [`postgres.Config`](https://pkg.go.dev/github.com/flamego/cache/postgres#Config) 对其进行配置：
 
 ```go:no-line-numbers{18-25}
 package main
@@ -161,7 +157,7 @@ func main() {
 
 ### MySQL
 
-The [`mysql.Initer`](https://pkg.go.dev/github.com/flamego/cache/mysql#Initer) is the function to initialize a MySQL storage backend, used together with [`mysql.Config`](https://pkg.go.dev/github.com/flamego/cache/mysql#Config) to customize the backend:
+[`mysql.Initer`](https://pkg.go.dev/github.com/flamego/cache/mysql#Initer) 是 MySQL 存储后端的初始化函数，并可以配合 [`mysql.Config`](https://pkg.go.dev/github.com/flamego/cache/mysql#Config) 对其进行配置：
 
 ```go:no-line-numbers{18-25}
 package main
@@ -211,7 +207,7 @@ func main() {
 
 ### Redis
 
-The [`redis.Initer`](https://pkg.go.dev/github.com/flamego/cache/redis#Initer) is the function to initialize a Redis storage backend, used together with [`redis.Config`](https://pkg.go.dev/github.com/flamego/cache/redis#Config) to customize the backend:
+[`redis.Initer`](https://pkg.go.dev/github.com/flamego/cache/redis#Initer) 是 Redis 存储后端的初始化函数，并可以配合 [`redis.Config`](https://pkg.go.dev/github.com/flamego/cache/redis#Config) 对其进行配置：
 
 ```go:no-line-numbers{17-25}
 package main
@@ -261,7 +257,7 @@ func main() {
 
 ### MongoDB
 
-The [`mongo.Initer`](https://pkg.go.dev/github.com/flamego/cache/mongo#Initer) is the function to initialize a MongoDB storage backend, used together with [`mongo.Config`](https://pkg.go.dev/github.com/flamego/cache/mongo#Config) to customize the backend:
+[`mongo.Initer`](https://pkg.go.dev/github.com/flamego/cache/mongo#Initer) 是 MongoDB 存储后端的初始化函数，并可以配合 [`mongo.Config`](https://pkg.go.dev/github.com/flamego/cache/mongo#Config) 对其进行配置：
 
 ```go:no-line-numbers{18-25}
 package main
@@ -309,14 +305,12 @@ func main() {
 }
 ```
 
-## Supported value types
+## 存储类型支持
 
-The default encoder and decoder of cache data use [gob](https://pkg.go.dev/encoding/gob), and only limited types are supported for values. When you encounter errors like `encode: gob: type not registered for interface: time.Duration`, you can use [`gob.Register`](https://pkg.go.dev/encoding/gob#Register) to register the type for encoding and decoding.
-
-For example:
+缓存数据的默认编解码格式为 [gob](https://pkg.go.dev/encoding/gob)，因此仅支持有限的值类型。如果遇到类似 `encode: gob: type not registered for interface: time.Duration` 这样的错误，则可以通过 [`gob.Register`](https://pkg.go.dev/encoding/gob#Register) 在应用中将该类型注册到编解码器中解决：
 
 ```go:no-line-numbers
 gob.Register(time.Duration(0))
 ```
 
-You only need to regsiter once for the entire lifecyle of your application.
+单个应用中对同一类型仅需注册一次。
