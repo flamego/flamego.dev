@@ -4,27 +4,23 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # brotli
 
-The brotli middleware provides Brotli compression to responses for [Flame instances](../core-concepts.md#instances).
+brotli 中间件为 [Flame 实例](../core-concepts.md#实例) 提供基于 Brotli 的响应流压缩服务。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/brotli) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/brotli?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/brotli) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/brotli?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/brotli
 ```
 
-## Usage examples
+## 用法示例
 
-You should register the [`brotli.Brotli`](https://pkg.go.dev/github.com/flamego/brotli#Brotli) _before all other middleware or handlers_ that would write response to clients, and it works out-of-the-box with the default settings:
+[`brotli.Brotli`](https://pkg.go.dev/github.com/flamego/brotli#Brotli) 需要在 _其它任何可能写入内容到响应流的中间件之前_ 被注册：
 
 ```go:no-line-numbers
 package main
@@ -44,7 +40,7 @@ func main() {
 }
 ```
 
-The [`brotli.Options`](https://pkg.go.dev/github.com/flamego/brotli#Options) can be used to further customize the behavior of the middleware:
+[`brotli.Options`](https://pkg.go.dev/github.com/flamego/brotli#Options) 可以被用于配置该中间件的行为：
 
 ```go:no-line-numbers{11-13}
 package main
@@ -58,7 +54,7 @@ func main() {
 	f := flamego.Classic()
 	f.Use(brotli.Brotli(
 		brotli.Options{
-			CompressionLevel: 11, // Best compression
+			CompressionLevel: 11, // 最优压缩
 		},
 	))
 	f.Get("/", func() string {
