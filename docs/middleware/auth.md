@@ -93,8 +93,7 @@ func main() {
 }
 ```
 
-
-The [`auth.BasicFunc`](https://pkg.go.dev/github.com/flamego/auth#BasicFunc) can be used to support dynamic tokens:
+The [`auth.BearerFunc`](https://pkg.go.dev/github.com/flamego/auth#BearerFunc) can be used to support dynamic tokens:
 
 ```go:no-line-numbers
 package main

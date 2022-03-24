@@ -8,28 +8,24 @@ next:
   link: ../faqs
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # 中间件集成
 
-To accelerate your development, the Flamego core team and the community have built some useful middleware in addition to the [core services](../core-services.md) that are builtin to the core framework.
+Flamego 在[核心服务](../core-services.md)之外开发并维护了一定数量的官方中间件来帮助用户开发 Web 应用：
 
-- [template](template.md) for rendering HTML using Go template.
-- [session](session.md) for managing user sessions.
-- [recaptcha](recaptcha.md) for providing [Google reCAPTCHA](https://www.google.com/recaptcha/about/) verification.
-- [csrf](csrf.md) for generating and validating CSRF tokens.
-- [cors](cors.md) for configuring [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS).
-- [binding](binding.md) for request data binding and validation.
-- [gzip](gzip.md) for Gzip compression to responses.
-- [cache](cache.md) for managing cache data.
-- [brotli](brotli.md) for Brotli compression to responses.
-- [auth](auth.md) for providing basic and bearer authentications.
-- [i18n](i18n.md) for providing internationalization and localization.
-- [captcha](captcha.md) for generating and validating captcha images.
-- [hcaptcha](hcaptcha.md) for providing [hCaptcha](https://www.hcaptcha.com/) verification.
+- [template](template.md) 使用 Go 模板引擎渲染 HTML
+- [session](session.md) 用于管理用户会话
+- [recaptcha](recaptcha.md) 用于集成 [Google reCAPTCHA](https://www.google.com/recaptcha/about/) 验证服务
+- [csrf](csrf.md) 用于生成和验证 CSRF 令牌
+- [cors](cors.md) 用于配置 [跨域资源共享](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [binding](binding.md) 用于请求数据绑定和验证
+- [gzip](gzip.md) 使用 Gzip 压缩响应流
+- [cache](cache.md) 用于管理缓存数据
+- [brotli](brotli.md) 使用 Brotli 压缩响应流
+- [auth](auth.md) 用于提供基于 HTTP Basic 和 Bearer 形式的请求验证
+- [i18n](i18n.md) 用于提供应用本地化服务
+- [captcha](captcha.md) 用于生成和验证验证码图片
+- [hcaptcha](hcaptcha.md) 用于集成 [hCaptcha](https://www.hcaptcha.com/) 验证服务
 
 ::: tip
-If you notice any middleware that is missing from the list, please don't hesitate to [send a pull request to this page](https://github.com/flamego/flamego.dev/edit/main/docs/middleware/README.md)!
+如果你发现列表有缺失，请直接[发送 Pull request 进行补充](https://github.com/flamego/flamego.dev/edit/main/docs/middleware/README.md)！
 :::

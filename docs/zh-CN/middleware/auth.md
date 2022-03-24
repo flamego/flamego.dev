@@ -4,29 +4,25 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # auth
 
-The auth middleware provides request authentication for [Flame instances](../core-concepts.md#instances), including basic and bearer authentications.
+auth 中间件为 [Flame 实例](../core-concepts.md#实例) 提供基于 HTTP Basic 和 Bearer 形式的请求验证。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/auth) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/auth?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/auth) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/auth?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/auth
 ```
 
-## Usage examples
+## 用法示例
 
-### Basic authentication
+### Basic 验证
 
-The [`auth.Basic`](https://pkg.go.dev/github.com/flamego/auth#Basic) takes a static combination of username and password to protect routes behind it. Upon successful authentication, the [`auth.User`](https://pkg.go.dev/github.com/flamego/auth#User) is injected into the request context, which simply contains the username:
+[`auth.Basic`](https://pkg.go.dev/github.com/flamego/auth#Basic) 支持基于一组静态的用户名和密码组合对请求进行验证，并在验证成功后将包含用户名的 [`auth.User`](https://pkg.go.dev/github.com/flamego/auth#User) 注入到请求上下文中：
 
 ```go:no-line-numbers
 package main
@@ -46,7 +42,7 @@ func main() {
 }
 ```
 
-The [`auth.BasicFunc`](https://pkg.go.dev/github.com/flamego/auth#BasicFunc) can be used to support dynamic combinations of username and password:
+也可以使用 [`auth.BasicFunc`](https://pkg.go.dev/github.com/flamego/auth#BasicFunc) 支持基于动态的用户名和密码组合：
 
 ```go:no-line-numbers{16}
 package main
@@ -73,11 +69,11 @@ func main() {
 }
 ```
 
-The [`auth.SecureCompare`](https://pkg.go.dev/github.com/flamego/auth#SecureCompare) is a function that does constant time compare of two strings to prevent timing attacks.
+使用 [`auth.SecureCompare`](https://pkg.go.dev/github.com/flamego/auth#SecureCompare) 对字符串进行比较可以预防基于时间的对比攻击。
 
-### Bearer authentication
+### Bearer 验证
 
-The [`auth.Bearer`](https://pkg.go.dev/github.com/flamego/auth#Bearer) takes a static token to protect routes behind it. Upon successful authentication, the [`auth.Token`](https://pkg.go.dev/github.com/flamego/auth#Token) is injected into the request context, which simply contains the token:
+[`auth.Bearer`](https://pkg.go.dev/github.com/flamego/auth#Bearer) 支持基于静态令牌对请求进行验证，并在验证成功后将包含令牌的 [`auth.Token`](https://pkg.go.dev/github.com/flamego/auth#Token) 注入到请求上下文中：
 
 ```go:no-line-numbers
 package main
@@ -97,8 +93,7 @@ func main() {
 }
 ```
 
-
-The [`auth.BasicFunc`](https://pkg.go.dev/github.com/flamego/auth#BasicFunc) can be used to support dynamic tokens:
+也可以使用 [`auth.BearerFunc`](https://pkg.go.dev/github.com/flamego/auth#BearerFunc) 支持基于动态令牌的验证：
 
 ```go:no-line-numbers
 package main
