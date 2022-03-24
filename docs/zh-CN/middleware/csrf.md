@@ -4,31 +4,27 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # csrf
 
-The csrf middleware generates and validates CSRF tokens for [Flame instances](../core-concepts.md#instances), it relies on the [session](session.md) middleware.
+csrf 中间件为 [Flame 实例](../core-concepts.md#实例)提供 CSRF 令牌的生成和验证服务，该中间件依赖于 [session](session.md) 中间件。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/session) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/session?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/csrf) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/csrf?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/csrf
 ```
 
-## Usage examples
+## 用法示例
 
-::: warning
-Examples included in this section is to demonstrate the usage of the csrf middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
+::: danger
+本小结仅展示 csrf 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 
-The [`csrf.Csrfer`](https://pkg.go.dev/github.com/flamego/csrf#Csrfer) works out-of-the-box with an optional [`csrf.Options`](https://pkg.go.dev/github.com/flamego/csrf#Options), and the [`csrf.Validate`](https://pkg.go.dev/github.com/flamego/csrf#Validate) should be used to guard routes that needs CSRF validation:
+[`csrf.Csrfer`](https://pkg.go.dev/github.com/flamego/csrf#Csrfer) 可以配合 [`csrf.Options`](https://pkg.go.dev/github.com/flamego/csrf#Options) 对中间件进行配置，并使用 [`csrf.Validate`](https://pkg.go.dev/github.com/flamego/csrf#Validate) 来进行 CSRF 令牌的验证：
 
 :::: code-group
 ::: code-group-item main.go
@@ -50,8 +46,7 @@ func main() {
 	f.Use(session.Sessioner())
 	f.Use(csrf.Csrfer())
 
-	// Simulate the authentication of a session. If the "userID" exists,
-	// then redirect to a form that requires CSRF protection.
+	// 模拟会话认证，若 userID 存在则重定向到包含 CSRF 令牌的表单页面
 	f.Get("/", func(c flamego.Context, s session.Session) {
 		if s.Get("userID") == nil {
 			c.Redirect("/login")
@@ -60,25 +55,25 @@ func main() {
 		c.Redirect("/protected")
 	})
 
-	// Set uid for the session
+	// 设置会话的 uid
 	f.Get("/login", func(c flamego.Context, s session.Session) {
 		s.Set("userID", 123)
 		c.Redirect("/")
 	})
 
-	// Render a protected form by passing a CSRF token using x.Token()
+	// 使用 x.Token() 将 CSRF 令牌渲染到模板中
 	f.Get("/protected", func(c flamego.Context, s session.Session, x csrf.CSRF, t template.Template, data template.Data) {
 		if s.Get("userID") == nil {
 			c.Redirect("/login", http.StatusUnauthorized)
 			return
 		}
 
-		// Pass token to the protected template
+		// 传递令牌到被渲染的模板
 		data["CSRFToken"] = x.Token()
 		t.HTML(http.StatusOK, "protected")
 	})
 
-	// Apply CSRF validation to route
+	// 应用 CSRF 验证
 	f.Post("/protected", csrf.Validate, func(c flamego.Context, s session.Session, t template.Template) {
 		if s.Get("userID") != nil {
 			c.ResponseWriter().Write([]byte("You submitted with a valid CSRF token"))
