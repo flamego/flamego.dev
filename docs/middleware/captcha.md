@@ -20,7 +20,7 @@ go get github.com/flamego/captcha
 
 ## Usage examples
 
-::: warning
+::: danger
 Examples included in this section is to demonstrate the usage of the captcha middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
 :::
 

@@ -4,31 +4,27 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # captcha
 
-The captcha middleware generates and validates captcha images for [Flame instances](../core-concepts.md#instances), it relies on the [session](session.md) middleware.
+captcha 中间件为 [Flame 实例](../core-concepts.md#实例) 提供验证码生成和验证服务，该中间件依赖于 [session](session.md) 中间件。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/captcha) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/captcha?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/captcha) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/captcha?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/captcha
 ```
 
-## Usage examples
+## 用法示例
 
-::: warning
-Examples included in this section is to demonstrate the usage of the captcha middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
+::: danger
+本小结仅展示 captcha 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 
-The [`captcha.Captchaer`](https://pkg.go.dev/github.com/flamego/captcha#Captchaer) works out-of-the-box with an optional [`captcha.Options`](https://pkg.go.dev/github.com/flamego/captcha#Options), and the `captcha.ValidText` should be used to validate captcha tokens:
+[`captcha.Captchaer`](https://pkg.go.dev/github.com/flamego/captcha#Captchaer) 可以配合 [`captcha.Options`](https://pkg.go.dev/github.com/flamego/captcha#Options) 对中间件进行配置，并使用 `captcha.ValidText` 对验证码结果进行验证：
 
 :::: code-group
 ::: code-group-item main.go
@@ -79,8 +75,8 @@ func main() {
 :::
 ::::
 
-Below is how it would look like in your browser for the above example:
+下图为程序运行时浏览器中所展示的内容：
 
 ![Form with captcha](https://user-images.githubusercontent.com/2946214/158567419-9a9556ad-c9d0-48db-b96a-32b9d4b67045.png)
 
-As the tooltip implies, single left-click on the captcha image would reload for a different one if characters in the current image is hard to recognize.
+正如图中提示，当验证码图片无法识别时可以通过鼠标左键点击更换新的图片。
