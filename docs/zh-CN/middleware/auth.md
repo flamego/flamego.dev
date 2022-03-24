@@ -6,7 +6,7 @@ prev:
 
 # auth
 
-auth 中间件为 [Flame 实例](../core-concepts.md#实例) 提供基于 HTTP Basic 和 Bearer 形式的请求验证服务。
+auth 中间件为 [Flame 实例](../core-concepts.md#实例)提供基于 HTTP Basic 和 Bearer 形式的请求验证服务。
 
 你可以在 [GitHub](https://github.com/flamego/auth) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/auth?tab=doc) 查看 API 文档。
 

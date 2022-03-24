@@ -4,27 +4,23 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # cors
 
-The cors middleware configures [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) for [Flame instances](../core-concepts.md#instances).
+cors 中间件为 [Flame 实例](../core-concepts.md#实例)提供[跨站资源共享](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)服务。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/cors) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/cors?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/cors) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/cors?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/cors
 ```
 
-## Usage examples
+## 用法示例
 
-The [`cors.CORS`](https://pkg.go.dev/github.com/flamego/cors#CORS) works out-of-the-box with an optional [`cors.Options`](https://pkg.go.dev/github.com/flamego/cors#Options):
+[`cors.CORS`](https://pkg.go.dev/github.com/flamego/cors#CORS) 开箱即用：
 
 ```go:no-line-numbers
 package main
@@ -46,7 +42,7 @@ func main() {
 }
 ```
 
-The [`cors.Options`](https://pkg.go.dev/github.com/flamego/cors#Options) can be used to further customize the behavior of the middleware:
+也可以配合 [`cors.Options`](https://pkg.go.dev/github.com/flamego/cors#Options) 对中间件进行配置：
 
 ```go:no-line-numbers{12-14}
 package main

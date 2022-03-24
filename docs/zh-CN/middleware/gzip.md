@@ -6,7 +6,7 @@ prev:
 
 # gzip
 
-gzip 中间件为 [Flame 实例](../core-concepts.md#实例) 提供基于 Gzip 的响应流压缩服务。
+gzip 中间件为 [Flame 实例](../core-concepts.md#实例)提供基于 Gzip 的响应流压缩服务。
 
 你可以在 [GitHub](https://github.com/flamego/gzip) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/gzip?tab=doc) 查看 API 文档。
 
