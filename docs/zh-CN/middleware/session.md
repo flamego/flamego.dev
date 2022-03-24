@@ -20,7 +20,7 @@ go get github.com/flamego/session
 
 ## 存储后端
 
-::: danger
+::: warning
 本小结仅展示 session 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 

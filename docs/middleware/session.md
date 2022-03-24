@@ -20,7 +20,7 @@ go get github.com/flamego/session
 
 ## Storage backends
 
-::: danger
+::: warning
 Examples included in this section is to demonstrate the usage of the session middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
 :::
 

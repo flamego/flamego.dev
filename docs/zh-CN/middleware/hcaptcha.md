@@ -4,19 +4,15 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # hcaptcha
 
-The hcaptcha middleware provides [hCaptcha](https://www.hcaptcha.com/) integration for [Flame instances](../core-concepts.md#instances).
+hcaptcha 中间件为 [Flame 实例](../core-concepts.md#实例)提供 [hCaptcha](https://www.hcaptcha.com/) 验证服务的集成。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/hcaptcha) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/hcaptcha?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/hcaptcha) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/hcaptcha?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/hcaptcha
@@ -25,10 +21,10 @@ go get github.com/flamego/hcaptcha
 ## Usage examples
 
 ::: warning
-Examples included in this section is to demonstrate the usage of the hcaptcha middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
+本小结仅展示 hcaptcha 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 
-The [`hcaptcha.Captcha`](https://pkg.go.dev/github.com/flamego/hcaptcha#Captcha) is used in combination with [`hcaptcha.Options`](https://pkg.go.dev/github.com/flamego/hcaptcha#Options), and the `hcaptcha.HCaptcha.Verify` should be used to verify response tokens:
+[`hcaptcha.Captcha`](https://pkg.go.dev/github.com/flamego/hcaptcha#Captcha) 可以配合 [`hcaptcha.Options`](https://pkg.go.dev/github.com/flamego/hcaptcha#Options) 对中间件进行配置，并使用 `hcaptcha.HCaptcha.Verify` 来进行验证码的校验：
 
 :::: code-group
 ::: code-group-item main.go
@@ -94,6 +90,6 @@ func main() {
 :::
 ::::
 
-Below is how it would look like in your browser for the above example:
+下图为程序运行时浏览器中所展示的内容：
 
 ![Form with hCaptcha](https://user-images.githubusercontent.com/2946214/158646590-6e58234f-70ae-4afa-a9f4-b69ffaa5c04f.png)
