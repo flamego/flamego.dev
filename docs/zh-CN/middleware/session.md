@@ -4,33 +4,29 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # session
 
-The session middleware provides user session management for [Flame instances](../core-concepts.md#instances), supporting various storage backends, including memory, file, PostgreSQL, MySQL, Redis and MongoDB.
+session 中间件为 [Flame 实例](../core-concepts.md#实例) 提供用户会话管理服务，支持的存储后端包括内存、文件系统、PostgreSQL、MySQL、Redis 和 MongoDB。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/session) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/session?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/session) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/session?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/session
 ```
 
-## Storage backends
+## 存储后端
 
-::: warning
-Examples included in this section is to demonstrate the usage of the session middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
+::: danger
+本小结仅展示 session 中间件的相关用法，示例中的用户验证方案绝不可以直接被用于生产环境。
 :::
 
-### Memory
+### 内存
 
-The [`session.Sessioner`](https://pkg.go.dev/github.com/flamego/session#Sessioner) works out-of-the-box with an optional [`session.Options`](https://pkg.go.dev/github.com/flamego/session#Options) and uses memory as the storage backend:
+[`session.Sessioner`](https://pkg.go.dev/github.com/flamego/session#Sessioner) 可以配合 [`session.Options`](https://pkg.go.dev/github.com/flamego/session#Options) 对中间件进行配置，并默认使用内存作为存储后端：
 
 ```go:no-line-numbers
 package main
@@ -64,11 +60,11 @@ func main() {
 }
 ```
 
-Because the memory is volatile, session data do not survive over restarts. Choose other storage backends if you need to persist session data.
+由于数据存储在内存中，因此会在应用退出后被清除。如需持久化会话数据，请选择其它存储后端。
 
-### File
+### 文件系统
 
-The [`session.FileIniter`](https://pkg.go.dev/github.com/flamego/session#FileIniter) is the function to initialize a file storage backend, used together with [`session.FileConfig`](https://pkg.go.dev/github.com/flamego/session#FileConfig) to customize the backend:
+[`session.FileIniter`](https://pkg.go.dev/github.com/flamego/session#FileIniter) 是文件系统存储后端的初始化函数，并可以配合 [`session.FileConfig`](https://pkg.go.dev/github.com/flamego/session#FileConfig) 对其进行配置：
 
 ```go:no-line-numbers{15-20}
 package main
@@ -113,7 +109,7 @@ func main() {
 
 ### PostgreSQL
 
-The [`postgres.Initer`](https://pkg.go.dev/github.com/flamego/session/postgres#Initer) is the function to initialize a PostgreSQL storage backend, used together with [`postgres.Config`](https://pkg.go.dev/github.com/flamego/session/postgres#Config) to customize the backend:
+[`postgres.Initer`](https://pkg.go.dev/github.com/flamego/session/postgres#Initer) 是 PostgreSQL 存储后端的初始化函数，并可以配合 [`postgres.Config`](https://pkg.go.dev/github.com/flamego/session/postgres#Config) 对其进行配置：
 
 ```go:no-line-numbers{17-24}
 package main
@@ -162,7 +158,7 @@ func main() {
 
 ### MySQL
 
-The [`mysql.Initer`](https://pkg.go.dev/github.com/flamego/session/mysql#Initer) is the function to initialize a MySQL storage backend, used together with [`mysql.Config`](https://pkg.go.dev/github.com/flamego/session/mysql#Config) to customize the backend:
+[`mysql.Initer`](https://pkg.go.dev/github.com/flamego/session/mysql#Initer) 是 MySQL 存储后端的初始化函数，并可以配合 [`mysql.Config`](https://pkg.go.dev/github.com/flamego/session/mysql#Config) 对其进行配置：
 
 ```go:no-line-numbers{17-24}
 package main
@@ -211,7 +207,7 @@ func main() {
 
 ### Redis
 
-The [`redis.Initer`](https://pkg.go.dev/github.com/flamego/session/redis#Initer) is the function to initialize a Redis storage backend, used together with [`redis.Config`](https://pkg.go.dev/github.com/flamego/session/redis#Config) to customize the backend:
+[`redis.Initer`](https://pkg.go.dev/github.com/flamego/session/redis#Initer) 是 Redis 存储后端的初始化函数，并可以配合 [`redis.Config`](https://pkg.go.dev/github.com/flamego/session/redis#Config) 对其进行配置：
 
 ```go:no-line-numbers{16-24}
 package main
@@ -260,7 +256,7 @@ func main() {
 
 ### MongoDB
 
-The [`mongo.Initer`](https://pkg.go.dev/github.com/flamego/session/mongo#Initer) is the function to initialize a MongoDB storage backend, used together with [`mongo.Config`](https://pkg.go.dev/github.com/flamego/session/mongo#Config) to customize the backend:
+[`mongo.Initer`](https://pkg.go.dev/github.com/flamego/session/mongo#Initer) 是 MongoDB 存储后端的初始化函数，并可以配合 [`mongo.Config`](https://pkg.go.dev/github.com/flamego/session/mongo#Config) 对其进行配置：
 
 ```go:no-line-numbers{17-24}
 package main
@@ -307,11 +303,11 @@ func main() {
 }
 ```
 
-## Flash messages
+## 闪现消息
 
-The session middleware provides a mechanism for flash messages, which are always retrieved on the next access of the same session, once and only once (i.e. flash messages get deleted upon retrievals).
+session 中间件提供了闪现消息的机制，闪现消息指的是在下次会话展现给用户的消息，并且只会展现一次。
 
-A flash message could just be a string in its simplest form:
+闪现消息最简单的形式就是字符串：
 
 ```go:no-line-numbers
 package main
@@ -339,7 +335,7 @@ func main() {
 }
 ```
 
-The [`session.Flash`]() is just the value holder of the flash message, and it could be any type that fits your application's needs, and doesn't even have to be the same type for different routes in the same application!
+[`session.Flash`](https://pkg.go.dev/github.com/flamego/session#Flash) 是单纯作为闪现消息的载体而存在，你可以使用任意类型作为闪现消息的具体表现形式，且不同路由之间的闪现消息类型也可完全不同：
 
 ```go:no-line-numbers{15,31-33}
 package main
@@ -388,4 +384,4 @@ func main() {
 }
 ```
 
-In the above example, we use different types of flash messages (`string` and `Flash`) for different routes and both of them work!
+上例展示了如何在不同的路由中使用不同类型的闪现消息（`string` and `Flash`）。

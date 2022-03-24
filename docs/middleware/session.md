@@ -20,7 +20,7 @@ go get github.com/flamego/session
 
 ## Storage backends
 
-::: warning
+::: danger
 Examples included in this section is to demonstrate the usage of the session middleware, by no means illustrates the idiomatic or even correct way of doing user authentication.
 :::
 
@@ -335,7 +335,7 @@ func main() {
 }
 ```
 
-The [`session.Flash`]() is just the value holder of the flash message, and it could be any type that fits your application's needs, and doesn't even have to be the same type for different routes in the same application!
+The [`session.Flash`](https://pkg.go.dev/github.com/flamego/session#Flash) is just the value holder of the flash message, and it could be any type that fits your application's needs, and doesn't even have to be the same type for different routes in the same application!
 
 ```go:no-line-numbers{15,31-33}
 package main

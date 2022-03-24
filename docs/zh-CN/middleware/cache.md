@@ -59,7 +59,7 @@ func main() {
 
 由于数据存储在内存中，因此会在应用退出后被清除。如需持久化缓存数据，请选择其它存储后端。
 
-### File
+### 文件系统
 
 [`cache.FileIniter`](https://pkg.go.dev/github.com/flamego/cache#FileIniter) 是文件系统存储后端的初始化函数，并可以配合 [`cache.FileConfig`](https://pkg.go.dev/github.com/flamego/cache#FileConfig) 对其进行配置：
 
