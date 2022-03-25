@@ -4,35 +4,31 @@ prev:
   link: ../middleware
 ---
 
-::: danger
-本页内容尚未完成简体中文的翻译，目前显示为英文版内容。如有意协助翻译，请前往 [GitHub](https://github.com/flamego/flamego/issues/78) 认领，感谢支持！
-:::
-
 # template
 
-The template middleware provides HTML rendering using [Go template](https://pkg.go.dev/html/template) for [Flame instances](../core-concepts.md#instances).
+template 中间件为 [Flame 实例](../core-concepts.md#实例)提供基于 [Go 模板引擎](https://pkg.go.dev/html/template)的 HTML 渲染服务。
 
-You can read source code of this middleware on [GitHub](https://github.com/flamego/template) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/template?tab=doc).
+你可以在 [GitHub](https://github.com/flamego/template) 上阅读该中间件的源码或通过 [pkg.go.dev](https://pkg.go.dev/github.com/flamego/template?tab=doc) 查看 API 文档。
 
-## Installation
+## 下载安装
 
-The minimum requirement of Go is **1.16**.
+Go 语言的最低版本要求为 **1.16**。
 
 ```:no-line-numbers
 go get github.com/flamego/template
 ```
 
-## Usage examples
+## 用法示例
 
 ::: tip
-Examples included in this section is to demonstrate the usage of the template middleware, please refer to the documentation of [`html/template`](https://pkg.go.dev/html/template) package for syntax and constraints.
+本小结仅展示 template 中间件的相关用法，如需了解模板引擎的用法请移步 [`html/template`](https://pkg.go.dev/html/template) 的文档。
 :::
 
-The [`template.Templater`](https://pkg.go.dev/github.com/flamego/template#Templater) works out-of-the-box with an optional [`template.Options`](https://pkg.go.dev/github.com/flamego/template#Options).
+[`template.Templater`](https://pkg.go.dev/github.com/flamego/template#Templater) 可以配合 [`template.Options`](https://pkg.go.dev/github.com/flamego/template#Options) 对中间件进行配置。
 
-By default, the templates files should resides in the "templates" directory and has extension of either `.html` or `.tmpl`. The special data type [`template.Data`](https://pkg.go.dev/github.com/flamego/template#Data) is provided as container to store any data you would want to be used in rendering the template.
+默认情况下，模板文件都需要被存放在 "templates" 目录内，并以 `.html` 或 `.tmpl` 作为文件名后缀。[`template.Data`](https://pkg.go.dev/github.com/flamego/template#Data) 是用于渲染模板的数据容器，即根对象。
 
-### Using local files
+### 使用本地文件
 
 :::: code-group
 ::: code-group-item main.go
@@ -89,12 +85,12 @@ func main() {
 :::
 ::::
 
-### Using the `embed.FS`
+### 使用 `embed.FS`
 
-The [`template.EmbedFS`](https://pkg.go.dev/github.com/flamego/template#EmbedFS) is a handy helper to convert your `embed.FS` into the [`template.FileSystem`](https://pkg.go.dev/github.com/flamego/template#FileSystem).
+[`template.EmbedFS`](https://pkg.go.dev/github.com/flamego/template#EmbedFS) 是用于将 `embed.FS` 转换为 [`template.FileSystem`](https://pkg.go.dev/github.com/flamego/template#FileSystem) 的辅助函数。
 
 :::: code-group
-::: code-group-item Directory
+::: code-group-item 目录
 ```:no-line-numbers
 $ tree .
 .
@@ -160,7 +156,7 @@ package templates
 
 import "embed"
 
-// Append "**/*" if you also have template files in subdirectories
+// 如果需要包含子目录中的模板文件则可以追加规则 "**/*"
 //go:embed *.tmpl
 var Templates embed.FS
 ```
@@ -184,6 +180,6 @@ var Templates embed.FS
 
 ## 模板缓存
 
-When your application is running with `flamego.EnvTypeDev` (default) or `flamego.EnvTypeTest`, template files are reloaded and recomplied upon every client request.
+当你的应用运行环境为 `flamego.EnvTypeDev`（默认运行环境）或 `flamego.EnvTypeTest` 时，每次响应客户端的请求都会对模板文件进行重新构建，便于开发调试。
 
-Set the [Env](../core-concepts.md#env) to `flamego.EnvTypeProd` to enable template caching in production.
+通过 [Env](../core-concepts.md#env) 函数将运行环境设置为 `flamego.EnvTypeProd` 可以启用模板缓存功能。
