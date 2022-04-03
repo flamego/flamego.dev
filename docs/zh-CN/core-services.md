@@ -187,7 +187,7 @@ Flame 实例的请求上下文提供了一系列相关的辅助方法，包括�
 - `QueryUnescape` 返回未经反转义的值
 - `QueryBool` 返回解析为 `bool` 类型的值
 - `QueryInt` 返回解析为 `int` 类型的值
-- `QueryInt` 返回解析为 `int64` 类型的值
+- `QueryInt64` 返回解析为 `int64` 类型的值
 - `QueryFloat64` 返回解析为 `float64` 类型的值
 
 ::: tip

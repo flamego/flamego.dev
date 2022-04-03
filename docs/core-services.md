@@ -191,7 +191,7 @@ There is a family of `Query` methods available at your fingertips, including:
 - `QueryUnescape` returns unescaped query result.
 - `QueryBool` returns value parsed as bool.
 - `QueryInt` returns value parsed as int.
-- `QueryInt` returns value parsed as int64.
+- `QueryInt64` returns value parsed as int64.
 - `QueryFloat64` returns value parsed as float64.
 
 ::: tip
