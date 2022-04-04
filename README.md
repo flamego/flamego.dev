@@ -14,7 +14,7 @@ yarn docs:dev
 
 ## Contribution guidelines
 
-⚠️ While we appreciate your interests, we are not able to accept documentation contributions other than English (US) and Simplified Chinese. This is because no core team member is able to speak in other languages professionally to be aligned our quality standard of the documentation, which makes future updates to the documentation nearly impossible, and outdated documentation is not desired.
+⚠️ While we appreciate your interests, we are not able to accept documentation contributions other than English (US) and Simplified Chinese ([flamego/flamego.cn](https://github.com/flamego/flamego.cn)). This is because no core team member is able to speak in other languages professionally to be aligned our quality standard of the documentation, which makes future updates to the documentation nearly impossible, and outdated documentation is not desired.
 
 ## Getting help
 
