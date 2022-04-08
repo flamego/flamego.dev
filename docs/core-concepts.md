@@ -251,6 +251,53 @@ Return an error
 :::
 ::::
 
+### Return body with potential error
+
+Body or error? Not a problem!
+
+:::: code-group
+::: code-group-item Code
+```go:no-line-numbers
+package main
+
+import (
+	"errors"
+	"net/http"
+
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.New()
+	f.Get("/string", func() (string, error) {
+		return "Return a string", nil
+	})
+	f.Get("/bytes", func() ([]byte, error) {
+		return []byte("Return some bytes"), nil
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item Test
+```:no-line-numbers
+$ curl -i http://localhost:2830/string
+HTTP/1.1 200 OK
+...
+
+Return a string
+
+$ curl -i http://localhost:2830/bytes
+HTTP/1.1 200 OK
+...
+
+Return some bytes
+```
+:::
+::::
+
+If the handler returns a non-`nil` error, the error message will be responded to the client instead.
+
 ![How cool is that?](https://media0.giphy.com/media/hS4Dz87diTpnDXf98E/giphy.gif?cid=ecf05e47go1oiqgxj1ro7e3t1usexogh109gigssvhxlp93a&rid=giphy.gif&ct=g)
 
 ## Service injection
@@ -331,7 +378,7 @@ f.Get("/hi", middleware7, middleware8, middleware9, func() { ... })
 
 Please be noted that middleware are always invoked first when a route is matched, i.e. even though that middleware on line 9 appear to be after the route handlers in the group (from line 6 to 8), they are being invoked first regardless.
 
-::: tip 💡 小贴士
+::: tip 💡 Did you know?
 Global middleware are always invoked regardless whether a route is matched.
 :::
 

@@ -59,7 +59,7 @@ $ curl http://localhost:2830
 Hello, Flamego!
 ```
 
-::: tip 💡 小贴士
+::: tip 💡 Did you know?
 If you have used other Go web frameworks like [Gin](https://github.com/gin-gonic/gin) or [Echo](https://echo.labstack.com/), you may be surpised that you can directly return a string in Flamego handlers as the response body to the client.
 
 That is exactly right! Of course, this won't be the only way to make a response body (which would be a very unfriendly design!). If you're interested in reading more, the [return values](core-concepts.md#return-values) is the magician behind the scene.
@@ -136,7 +136,7 @@ On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https
 
 On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flaemgo.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
 
-::: tip 💡 小贴士
+::: tip 💡 Did you know?
 You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but [an empty interface (`interface{}`)](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17).
 
 So how does the Flame instance determine what to pass down to its handlers at runtime?
