@@ -60,6 +60,15 @@ func main() {
 }
 ```
 
+### How do I serve file downloads?
+
+```go
+f.Get("/download", func(w http.ResponseWriter, r *http.Request) {
+	// ...
+	http.ServeFile(w, r, "path to filename")
+})
+```
+
 ## How do I integrate into existing applications?
 
 Because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface, a Flame instance can be plugged into anywhere that accepts a `http.Handler`.
