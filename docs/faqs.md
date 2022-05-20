@@ -62,7 +62,7 @@ func main() {
 
 ## How do I serve file downloads?
 
-```go
+```go:no-line-numbers
 import (
 	"net/http"
 	"net/url"
