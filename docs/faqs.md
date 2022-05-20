@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-### How do I serve file downloads?
+## How do I serve file downloads?
 
 ```go
 f.Get("/download", func(w http.ResponseWriter, r *http.Request) {
