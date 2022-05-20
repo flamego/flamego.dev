@@ -63,10 +63,29 @@ func main() {
 ### How do I serve file downloads?
 
 ```go
-f.Get("/download", func(w http.ResponseWriter, r *http.Request) {
-	// ...
-	http.ServeFile(w, r, "path to filename")
-})
+import (
+	"net/http"
+	"net/url"
+	"path/filepath"
+
+	"github.com/flamego/flamego"
+	"golang.org/x/exp/utf8string"
+)
+
+func main() {
+	f := flamego.Classic()
+	f.Get("/download", func(w http.ResponseWriter, r *http.Request) {
+		fpath := "your filepath"
+		filename := filepath.Base(fpath)
+		if utf8string.NewString(filename).IsASCII() {
+			w.Header().Set("Content-Disposition", `attachment; filename="`+filename+`"`)
+		} else {
+			w.Header().Set("Content-Disposition", `attachment; filename*=UTF-8''`+url.QueryEscape(filename))
+		}
+		http.ServeFile(w, r, fpath)
+	})
+	f.Run()
+}
 ```
 
 ## How do I integrate into existing applications?
