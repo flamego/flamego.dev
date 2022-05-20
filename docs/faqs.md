@@ -60,7 +60,7 @@ func main() {
 }
 ```
 
-### How do I serve file downloads?
+## How do I serve file downloads?
 
 ```go
 import (
