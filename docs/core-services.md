@@ -194,6 +194,8 @@ There is a family of `Query` methods available at your fingertips, including:
 - `QueryInt64` returns value parsed as int64.
 - `QueryFloat64` returns value parsed as float64.
 
+All of these methods accept an optional second argument as the default value when the parameter is absent.
+
 ::: tip
 If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing the underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
 
