@@ -37,6 +37,10 @@ When you want to match a selected list of HTTP methods for a single route, `Rout
 
 ```go:no-line-numbers
 f.Routes("/", "GET,POST", ...)
+
+// or
+
+f.Routes("/", http.MethodGet, http.MethodPost, ...)
 ```
 
 ## Terminology
