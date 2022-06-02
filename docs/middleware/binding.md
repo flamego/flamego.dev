@@ -306,3 +306,151 @@ func main() {
 	f.Run()
 }
 ```
+
+## Localize validation errors
+
+If your web application supports localization for users speak in different languages, it is equally important to provide the error message in their preferred language.
+
+Here is a playable example in your browser to get a taste of how to localize validation errors in your own style!
+
+:::: code-group
+::: code-group-item Directory
+```:no-line-numbers
+$ tree .
+.
+├── locales
+│   ├── locale_en-US.ini
+│   └── locale_zh-CN.ini
+├── templates
+│   └── home.tmpl
+├── go.mod
+├── go.sum
+└── main.go
+```
+:::
+::: code-group-item main.go
+```go:no-line-numbers{41-50}
+package main
+
+import (
+	"errors"
+	"fmt"
+	"net/http"
+
+	"github.com/flamego/binding"
+	"github.com/flamego/flamego"
+	"github.com/flamego/i18n"
+	"github.com/flamego/template"
+	"github.com/flamego/validator"
+)
+
+type User struct {
+	FirstName string `form:"first_name" validate:"required"`
+	LastName  string `form:"last_name" validate:"required"`
+	Age       int    `form:"age" validate:"gte=0,lte=130"`
+	Email     string `form:"email" validate:"required,email"`
+}
+
+func main() {
+	f := flamego.Classic()
+	f.Use(template.Templater())
+	f.Use(i18n.I18n(
+		i18n.Options{
+			Languages: []i18n.Language{
+				{Name: "en-US", Description: "English"},
+				{Name: "zh-CN", Description: "简体中文"},
+			},
+		},
+	))
+	f.Get("/", func(t template.Template) {
+		t.HTML(http.StatusOK, "home")
+	})
+	f.Post("/", binding.Form(User{}), func(w http.ResponseWriter, form User, errs binding.Errors, l i18n.Locale) {
+		if len(errs) > 0 {
+			var err error
+			switch errs[0].Category {
+			case binding.ErrorCategoryValidation:
+				verr := errs[0].Err.(validator.ValidationErrors)[0]
+				name := l.Translate("field::" + verr.Namespace())
+				param := verr.Param()
+				var reason string
+				if param == "" {
+					reason = l.Translate("validation::" + verr.Tag())
+				} else {
+					reason = l.Translate("validation::"+verr.Tag(), verr.Param())
+				}
+				err = errors.New(name + reason)
+			default:
+				err = errs[0].Err
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(fmt.Sprintf("Oops! Error occurred: %v", err)))
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(fmt.Sprintf("User: %#+v", form)))
+	})
+	f.Run()
+}
+```
+:::
+::: code-group-item templates/home.tmpl
+```html:no-line-numbers
+<form method="POST">
+  <div>
+    <label>First name:</label>
+    <input type="text" name="first_name" value="John">
+  </div>
+  <div>
+    <label>Last name:</label>
+    <input type="text" name="last_name" value="Smith">
+  </div>
+  <div>
+    <label>Age:</label>
+    <input type="number" name="age" value="90">
+  </div>
+  <div>
+    <label>Email:</label>
+    <input type="email" name="email" value="john@example.com">
+  </div>
+  <div>
+    <label>Language:</label>
+    <a href="?lang=en-US">English</a>,
+    <a href="?lang=zh-CN">简体中文</a>
+  </div>
+  <input type="submit" name="button" value="Submit">
+</form>
+```
+:::
+::: code-group-item locale_en-US.ini
+```ini:no-line-numbers
+[field]
+User.FirstName = First name
+User.LastName = Last name
+User.Age = Age
+User.Email = Email
+
+[validation]
+required = ` cannot be empty`
+gte = ` must be greater than or equal to %s`
+lte = ` must be less than or equal to %s`
+email = ` must be an email address`
+```
+:::
+::: code-group-item locale_zh-CN.ini
+```ini:no-line-numbers
+[field]
+User.FirstName = 名字
+User.LastName = 姓氏
+User.Age = 年龄
+User.Email = 邮箱
+
+[validation]
+required = 不能为空
+gte = 必须大于或等于 %s
+lte = 必须小于或等于 %s
+email = 必须是一个电子邮箱地址
+```
+:::
+::::
