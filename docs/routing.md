@@ -420,6 +420,25 @@ f.Get("/users/{name}", ...)
 The optional routes can only be used for the last URL path segment.
 :::
 
+## Matching headers
+
+::: tip 🆕 Available in v1.5.0
+:::
+
+In addition to match a request path, you may also configure request headers to be matched for a given route:
+
+```go:no-line-numbers
+f.Get("/", ...).Headers(
+	"User-Agent", "Chrome",   // Loose match
+	"Host", "^flamego\.dev$", // Exact match
+	"Cache-Control", "",      // As long as "Cache-Control" is not empty
+)
+```
+
+The `Headers` method accepts key-value pairs as the list of matching criteria for request headers, where key is the header name and value is a regex.
+
+When a route fails on matching request headers, the Flame instance continues to match other routes instead of halting the route matching process.
+
 ## Matching priority
 
 When your web application grows large enough, you'll start to want to make sense of which route gets matched at when. This is where the matching priority comes into play.
