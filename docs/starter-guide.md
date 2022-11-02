@@ -126,7 +126,7 @@ So what are different now?
 
 On line 11, we're still using the `flamego.Classic` to give us a classic Flame instance.
 
-On line 12, insetad of using an anonymous function, function `printRequestPath` is registered as the handler for all of the HTTP GET requests under root path ("/") using the notation `{*}`. The routing match stops at the slash ("/") as you can tell from the last test request to "http://localhost:2830/bad-ass/who-am-i" that gives us 404.
+On line 12, instead of using an anonymous function, function `printRequestPath` is registered as the handler for all of the HTTP GET requests under root path ("/") using the notation `{*}`. The routing match stops at the slash ("/") as you can tell from the last test request to "http://localhost:2830/bad-ass/who-am-i" that gives us 404.
 
 ::: tip
 Try using the notation `{**}`, then redo all test requests and see what changes. If you're interested in reading more, the [routing](routing.md) has the best resources you would want.
