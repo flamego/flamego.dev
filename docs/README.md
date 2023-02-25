@@ -13,7 +13,7 @@ It is the successor of the [Macaron](https://github.com/go-macaron/macaron), and
 
 ## Installation
 
-The minimum requirement of Go is **1.18**.
+The minimum requirement of Go is **1.19**.
 
 ```:no-line-numbers
 go get github.com/flamego/flamego
