@@ -228,21 +228,20 @@ f.Get(..., func(r *http.Request) {
 
 ## Default logger
 
-The [`*log.Logger`](https://pkg.go.dev/log#Logger) is available to all handers for general logging purposes, this is particularly useful if you're writing middleware:
+The [Charm](https://charm.sh/)'s [`log.Logger`](https://pkg.go.dev/github.com/charmbracelet/log#Logger) is available to all handers for general-purpose structured logging, this is particularly useful if you're writing middleware:
 
 ```go:no-line-numbers
 package main
 
 import (
-	"log"
-
+	"github.com/charmbracelet/log"
 	"github.com/flamego/flamego"
 )
 
 func main() {
 	f := flamego.New()
-	f.Get("/", func(log *log.Logger) {
-		log.Println("Hello, Flamego!")
+	f.Get("/", func(r *http.Request, logger log.Logger) {
+		logger.Info("Hello, Flamego!", "path", r.RequestURI)
 	})
 	f.Run()
 }
@@ -251,11 +250,15 @@ func main() {
 When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
 
 ```:no-line-numbers
-[Flamego] Listening on 0.0.0.0:2830 (development)
-[Flamego] Hello, Flamego!
+2023-03-06 20:57:38 🧙 Flamego: Listening on 0.0.0.0:2830 env=development
+2023-03-06 20:57:51 INFO 🧙 Flamego: Hello, Flamego! path=/
 ```
 
-The [routing logger](#routing-logger) is taking advantage of this feature to [print the duration and status code of requests](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/logger.go#L98).
+The [routing logger](#routing-logger) is taking advantage of this feature to [print the duration and status code of requests](https://github.com/flamego/flamego/blob/1150b7b988c4287840068703c11c892f900d60f1/logger.go#L42-L47).
+
+::: tip
+Prior to 1.8.0, only the [`*log.Logger`](https://pkg.go.dev/log#Logger) from the standard library is available as the logger.
+:::
 
 ## Response stream
 
@@ -334,9 +337,9 @@ func main() {
 When you run the above program and do `curl http://localhost:2830/`, the following logs are printed to your terminal:
 
 ```:no-line-numbers
-[Flamego] Listening on 0.0.0.0:2830 (development)
-[Flamego] ...: Started GET / for 127.0.0.1
-[Flamego] ...: Completed GET / 200 OK in 165.791µs
+2023-03-06 20:59:58 🧙 Flamego: Listening on 0.0.0.0:2830 env=development
+2023-03-06 21:00:01 🧙 Flamego: Started method=GET path=/ remote=127.0.0.1
+2023-03-06 21:00:01 🧙 Flamego: Completed method=GET path=/ status=0 duration="564.792µs"
 ```
 
 ## Panic recovery
