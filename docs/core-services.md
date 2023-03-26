@@ -228,7 +228,7 @@ f.Get(..., func(r *http.Request) {
 
 ## Default logger
 
-The [Charm](https://charm.sh/)'s [`log.Logger`](https://pkg.go.dev/github.com/charmbracelet/log#Logger) is available to all handers for general-purpose structured logging, this is particularly useful if you're writing middleware:
+The [Charm](https://charm.sh/)'s [`*log.Logger`](https://pkg.go.dev/github.com/charmbracelet/log#Logger) is available to all handers for general-purpose structured logging, this is particularly useful if you're writing middleware:
 
 ```go:no-line-numbers
 package main
@@ -240,7 +240,7 @@ import (
 
 func main() {
 	f := flamego.New()
-	f.Get("/", func(r *http.Request, logger log.Logger) {
+	f.Get("/", func(r *http.Request, logger *log.Logger) {
 		logger.Info("Hello, Flamego!", "path", r.RequestURI)
 	})
 	f.Run()
@@ -251,7 +251,7 @@ When you run the above program and do `curl http://localhost:2830/`, the followi
 
 ```:no-line-numbers
 2023-03-06 20:57:38 🧙 Flamego: Listening on 0.0.0.0:2830 env=development
-2023-03-06 20:57:51 INFO 🧙 Flamego: Hello, Flamego! path=/
+2023-03-06 20:57:51 INFO Hello, Flamego! path=/
 ```
 
 The [routing logger](#routing-logger) is taking advantage of this feature to [print the duration and status code of requests](https://github.com/flamego/flamego/blob/1150b7b988c4287840068703c11c892f900d60f1/logger.go#L42-L47).
