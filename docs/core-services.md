@@ -338,8 +338,8 @@ When you run the above program and do `curl http://localhost:2830/`, the followi
 
 ```:no-line-numbers
 2023-03-06 20:59:58 🧙 Flamego: Listening on 0.0.0.0:2830 env=development
-2023-03-06 21:00:01 🧙 Flamego: Started method=GET path=/ remote=127.0.0.1
-2023-03-06 21:00:01 🧙 Flamego: Completed method=GET path=/ status=0 duration="564.792µs"
+2023-03-06 21:00:01 Logger: Started method=GET path=/ remote=127.0.0.1
+2023-03-06 21:00:01 Logger: Completed method=GET path=/ status=0 duration="564.792µs"
 ```
 
 ## Panic recovery
