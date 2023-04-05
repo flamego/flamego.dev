@@ -29,7 +29,7 @@ func main() {
 
 On line 6, the function [`flamego.Classic`](https://pkg.go.dev/github.com/flamego/flamego#Classic) creates and returns a [classic Flame instance](core-concepts.md#classic-flame) with a default list of middleware, including [`flamego.Logger`](core-services.md#routing-logger), [`flamego.Recovery`](core-services.md#panic-recovery) and [`flamego.Static`](core-services.md#serving-static-files).
 
-On line 7, the method [`f.Get`](https://pkg.go.dev/github.com/flamego/flamego#Router) registers the anonymous function (from line 7 to 9) to be the [handler](core-concepts.md#handlers) of the root path ("/") when a HTTP GET request comes in. In this case, the handler simply reponds a "Hello, Flamego!" string to the client.
+On line 7, the method [`f.Get`](https://pkg.go.dev/github.com/flamego/flamego#Router) registers the anonymous function (from line 7 to 9) to be the [handler](core-concepts.md#handlers) of the root path ("/") when a HTTP GET request comes in. In this case, the handler simply responds with a "Hello, Flamego!" string to the client.
 
 On line 10, we start the web server by calling [`f.Run`](https://pkg.go.dev/github.com/flamego/flamego#Flame.Run). By default, the [Flame instance](core-concepts.md#instances) listens on the address `0.0.0.0:2830`.
 
@@ -60,7 +60,7 @@ Hello, Flamego!
 ```
 
 ::: tip 💡 Did you know?
-If you have used other Go web frameworks like [Gin](https://github.com/gin-gonic/gin) or [Echo](https://echo.labstack.com/), you may be surpised that you can directly return a string in Flamego handlers as the response body to the client.
+If you have used other Go web frameworks like [Gin](https://github.com/gin-gonic/gin) or [Echo](https://echo.labstack.com/), you may be surprised that you can directly return a string in Flamego handlers as the response body to the client.
 
 That is exactly right! Of course, this won't be the only way to make a response body (which would be a very unfriendly design!). If you're interested in reading more, the [return values](core-concepts.md#return-values) is the magician behind the scene.
 :::
@@ -94,7 +94,7 @@ func printRequestPath(c flamego.Context) string {
 }
 ```
 
-As you may have guessed, this program responds back the request path that the client is requesting.
+As you may have guessed, this program responds back with the request path that the client is requesting.
 
 Take a look!
 
@@ -122,22 +122,22 @@ $ curl http://localhost:2830/bad-ass/who-am-i
 :::
 ::::
 
-So what are different now?
+So what is different now?
 
 On line 11, we're still using the `flamego.Classic` to give us a classic Flame instance.
 
-On line 12, insetad of using an anonymous function, function `printRequestPath` is registered as the handler for all of the HTTP GET requests under root path ("/") using the notation `{*}`. The routing match stops at the slash ("/") as you can tell from the last test request to "http://localhost:2830/bad-ass/who-am-i" that gives us 404.
+On line 12, instead of using an anonymous function, function `printRequestPath` is registered as the handler for all of the HTTP GET requests under root path ("/") using the notation `{*}`. The routing match stops at the slash ("/") as you can tell from the last test request to "http://localhost:2830/bad-ass/who-am-i" that gives us 404.
 
 ::: tip
 Try using the notation `{**}`, then redo all test requests and see what changes. If you're interested in reading more, the [routing](routing.md) has the best resources you would want.
 :::
 
-On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe), which is the most common way to start a web server in Go, and maybe more familiar to you if you have used other Go web frameworks. This is possible with Flamego because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface. Therefore, a Flame instance can be plugged into anywhere that accepts a `http.Handler`, and is particularly useful when you want to progressively migrate an existing Go web application to use Flamego.
+On line 15, the call of `f.Run` is replaced by the [`http.ListenAndServe`](https://pkg.go.dev/net/http#ListenAndServe), which is the most common way to start a web server in Go, and maybe more familiar to you if you have used other Go web frameworks. This is possible with Flamego because Flame instances implement the [`http.Handler`](https://pkg.go.dev/net/http#Handler) interface. Therefore, a Flame instance can be plugged into anything that accepts a `http.Handler`, and is particularly useful when you want to progressively migrate an existing Go web application to use Flamego.
 
-On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flaemgo.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
+On line 18 to 20, we define the signature and the body of the `printRequestPath`. It accepts one argument with the type [`flamego.Context`](core-services.md#context) and returns a string. It then calls the `Request` method to retrieve the [`http.Request`](https://pkg.go.dev/net/http#Request) which contains the request path from the client.
 
 ::: tip 💡 Did you know?
-You may start wondering that we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but [an empty interface (`interface{}`)](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17).
+You may start wondering why we did not tell the Flame instance what arguments it should pass to the `printRequestPath` when the function is being invoked, and if you look up the definition of [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), it is nothing but [an empty interface (`interface{}`)](https://github.com/flamego/flamego/blob/8505d18c5243f797d5bb7160797d26454b9e5011/handler.go#L17).
 
 So how does the Flame instance determine what to pass down to its handlers at runtime?
 
@@ -148,4 +148,4 @@ This is the beauty (or confusion? 😅) of the [service injection](core-concepts
 
 At this point, you should have some basic understanding of what is Flamego and how to start using it in your Go web applications.
 
-Starting a new journey is never easy, especially when there are a lot of new concepts and content to learn. Please don't be hesitate reaching out for help and have a nice day!
+Starting a new journey is never easy, especially when there are a lot of new concepts and content to learn. Please don't hesitate reaching out for help and have a nice day!
