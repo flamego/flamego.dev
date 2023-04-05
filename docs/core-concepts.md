@@ -70,7 +70,7 @@ It feels so elegent to have isolated state managed by each Flame instance, and m
 
 ## Handlers
 
-Flamego handlers are defined as [`flamego.Hander`](https://pkg.go.dev/github.com/flamego/flamego#Handler), and if you look closer, it is just an empty interface (`interface{}`):
+Flamego handlers are defined as [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), and if you look closer, it is just an empty interface (`interface{}`):
 
 ```go:no-line-numbers
 // Handler is any callable function. Flamego attempts to inject services into
