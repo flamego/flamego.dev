@@ -140,7 +140,7 @@ HTTP/1.1 301 Moved Permanently
 ::: warning
 Be aware that the `Redirect` method does a naive redirection and is vulnerable to the [open redirect vulnerability](https://portswigger.net/kb/issues/00500100_open-redirection-reflected).
 
-For example, the following is also works as a valid redirection:
+For example, the following also works as a valid redirection:
 
 ```go:no-line-numbers
 c.Redirect("https://www.google.com")
