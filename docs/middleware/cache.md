@@ -307,7 +307,7 @@ func main() {
 
 ### SQLite
 
-The [`sqlite.Initer`](https://pkg.go.dev/github.com/flamego/cache/sqlite#Initer) is the function to initialize a SQLite storage backend, used together with [`sqlite.Config`](https://pkg.go.dev/github.com/flamego/cache/mongo#Config) to customize the backend:
+The [`sqlite.Initer`](https://pkg.go.dev/github.com/flamego/cache/sqlite#Initer) is the function to initialize a SQLite storage backend, used together with [`sqlite.Config`](https://pkg.go.dev/github.com/flamego/cache/sqlite#Config) to customize the backend:
 
 ```go:no-line-numbers{17-24}
 package main
