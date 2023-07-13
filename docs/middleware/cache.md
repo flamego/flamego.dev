@@ -305,6 +305,55 @@ func main() {
 }
 ```
 
+### SQLite
+
+The [`sqlite.Initer`](https://pkg.go.dev/github.com/flamego/cache/sqlite#Initer) is the function to initialize a SQLite storage backend, used together with [`sqlite.Config`](https://pkg.go.dev/github.com/flamego/cache/mongo#Config) to customize the backend:
+
+```go:no-line-numbers{17-24}
+package main
+
+import (
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/flamego/cache"
+	"github.com/flamego/cache/sqlite"
+	"github.com/flamego/flamego"
+)
+
+func main() {
+	f := flamego.Classic()
+
+	f.Use(cache.Cacher(
+		cache.Options{
+			Initer: sqlite.Initer(),
+			Config: sqlite.Config{
+				DSN:       "app.db",
+				Table:     "cache",
+				InitTable: true,
+			},
+		},
+	))
+	f.Get("/set", func(r *http.Request, cache cache.Cache) error {
+		return cache.Set(r.Context(), "cooldown", true, time.Minute)
+	})
+	f.Get("/get", func(r *http.Request, cache cache.Cache) string {
+		v, err := cache.Get(r.Context(), "cooldown")
+		if err != nil && err != os.ErrNotExist {
+			return err.Error()
+		}
+
+		cooldown, ok := v.(bool)
+		if !ok || !cooldown {
+			return "It has been cooled"
+		}
+		return "Still hot"
+	})
+	f.Run()
+}
+```
+
 ## Supported value types
 
 The default encoder and decoder of cache data use [gob](https://pkg.go.dev/encoding/gob), and only limited types are supported for values. When you encounter errors like `encode: gob: type not registered for interface: time.Duration`, you can use [`gob.Register`](https://pkg.go.dev/encoding/gob#Register) to register the type for encoding and decoding.
