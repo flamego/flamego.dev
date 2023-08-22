@@ -12,8 +12,6 @@ You can read source code of this middleware on [GitHub](https://github.com/flame
 
 ## Installation
 
-The minimum requirement of Go is **1.16**.
-
 ```:no-line-numbers
 go get github.com/flamego/gzip
 ```

@@ -6,13 +6,11 @@ prev:
 
 # session
 
-The session middleware provides user session management for [Flame instances](../core-concepts.md#instances), supporting various storage backends, including memory, file, PostgreSQL, MySQL, Redis and MongoDB.
+The session middleware provides user session management for [Flame instances](../core-concepts.md#instances), supporting various storage backends, including memory, file, PostgreSQL, MySQL, Redis, MongoDB and SQLite.
 
 You can read source code of this middleware on [GitHub](https://github.com/flamego/session) and API documentation on [pkg.go.dev](https://pkg.go.dev/github.com/flamego/session?tab=doc).
 
 ## Installation
-
-The minimum requirement of Go is **1.16**.
 
 ```:no-line-numbers
 go get github.com/flamego/session
