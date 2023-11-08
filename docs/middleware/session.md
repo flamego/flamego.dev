@@ -431,3 +431,15 @@ func main() {
 ```
 
 In the above example, we use different types of flash messages (`string` and `Flash`) for different routes and both of them work!
+
+## Supported value types
+
+The default encoder and decoder of cache data use [gob](https://pkg.go.dev/encoding/gob), and only limited types are supported for values. When you encounter errors like `encode: gob: type not registered for interface: time.Duration`, you can use [`gob.Register`](https://pkg.go.dev/encoding/gob#Register) to register the type for encoding and decoding.
+
+For example:
+
+```go:no-line-numbers
+gob.Register(time.Duration(0))
+```
+
+You only need to regsiter once for the entire lifecyle of your application.
