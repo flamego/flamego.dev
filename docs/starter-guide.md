@@ -52,7 +52,7 @@ $ go run main.go
 
 Once you see the last line from your terminal, you're good to go!
 
-You may verify the result by either visiting [http://localhost:2830](http://localhost:2830) ([why 2830?](faqs.md#why-the-default-port-is-2830)) in your browser, or through the folllowing `curl` command:
+You may verify the result by either visiting [http://localhost:2830](http://localhost:2830) ([why 2830?](faqs.md#why-the-default-port-is-2830)) in your browser, or through the following `curl` command:
 
 ```:no-line-numbers
 $ curl http://localhost:2830

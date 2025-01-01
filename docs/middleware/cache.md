@@ -362,4 +362,4 @@ For example:
 gob.Register(time.Duration(0))
 ```
 
-You only need to regsiter once for the entire lifecyle of your application.
+You only need to register once for the entire lifecycle of your application.
