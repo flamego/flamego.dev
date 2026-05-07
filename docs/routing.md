@@ -177,6 +177,10 @@ Welcome to Boston, MA!
 Try a test request using `curl http://localhost:2830/posts/2021-11-abc.html` and see what changes.
 :::
 
+::: tip 🆕 Available in v1.9.10
+Captured bind parameters are also populated onto the request via [`(*http.Request).SetPathValue`](https://pkg.go.dev/net/http#Request.SetPathValue), so `r.PathValue("name")` returns the same value as `c.Param("name")`.
+:::
+
 ### Regular expressions
 
 A bind parameter can be defined with a custom regular expression to capture characters in a URL path segment, and you may have one or more such bind parameters within a URL path segment. The regular expressions are needed to be surrounded by a pair of forward slashes (`/<regexp>/`).
