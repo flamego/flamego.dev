@@ -354,6 +354,52 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 ```
 :::
 
+#### Multiple globs per route
+
+::: tip 🆕 Available in v1.10.0
+:::
+
+A single route may contain more than one glob. Two globs in the same route must be separated by either:
+
+- a static or regex segment, or
+- a capture limit on the earlier glob, which bounds how many segments it can consume.
+
+Static segments pin the path text exactly. Regex segments are accepted as separators regardless of how broadly the regex matches — a tight pattern like `/[0-9]+/` gives a real disambiguation point, while a permissive pattern like `/.+/` does not, but the regex is taken as your explicit opt-in to that route shape and the resulting bindings follow the normal [matching priority](#matching-priority).
+
+Placeholder segments (`{name}`) do **not** count as separators because they accept any one segment of any content with no opt-in, which would leave the split between the surrounding globs silently ambiguous.
+
+Below are valid multi-glob routes:
+
+```go
+// Static separator between unbounded globs.
+f.Get("/files/{prefix: **}/blob/{path: **}", ...)
+
+// Regex separator between unbounded globs.
+f.Get("/repos/{owner: **}/{id: /[0-9]+/}/{path: **}", ...)
+
+// Capture limit on the earlier glob.
+f.Get("/archive/{head: **, capture: 2}/{tail: **}", ...)
+
+// Three globs with mixed separators.
+f.Get("/api/{a: **, capture: 2}/sep/{b: **, capture: 2}/end/{c: **}", ...)
+```
+
+These routes are rejected at registration:
+
+```go
+// Two unbounded globs with no separator.
+f.Get("/api/{a: **}/{b: **}", ...)
+
+// Placeholder is not an anchor — the split is ambiguous.
+f.Get("/api/{a: **}/{id}/{b: **}", ...)
+
+// A capture limit on the *later* glob does not help, since the earlier
+// (unbounded) glob is what consumes path segments first.
+f.Get("/api/{a: **}/{b: **, capture: 2}", ...)
+```
+
+For a non-final bounded glob, matching grows the captured segment up to the capture limit and prefers the longest partition that lets the rest of the route match. If a partition matches through a more-specific sibling (static, regex, or placeholder), that match wins immediately even when a longer partition would also succeed through a glob sibling. In other words, the documented [matching priority](#matching-priority) outranks partition length.
+
 ## Combo routes
 
 The `Combo` method can create combo routes when you have different handlers for different HTTP methods of the same route:
