@@ -73,9 +73,10 @@ It feels so elegent to have isolated state managed by each Flame instance, and m
 Flamego handlers are defined as [`flamego.Handler`](https://pkg.go.dev/github.com/flamego/flamego#Handler), and if you look closer, it is just an empty interface (`interface{}`):
 
 ```go:no-line-numbers
-// Handler is any callable function. Flamego attempts to inject services into
-// the Handler's argument list and panics if any argument could not be fulfilled
-// via dependency injection.
+// Handler is any callable function or a value that implements http.Handler.
+// Flamego attempts to inject services into the Handler's argument list and
+// panics if any argument could not be fulfilled via dependency injection.
+// Values implementing http.Handler are invoked via their ServeHTTP method.
 type Handler interface{}
 ```
 
@@ -127,6 +128,14 @@ Respond from a method of a type
 ```
 :::
 ::::
+
+::: tip 🆕 Available in v1.9.11
+Any value that implements [`http.Handler`](https://pkg.go.dev/net/http#Handler) is also a valid `flamego.Handler`, so you can plug in standard library handlers or third-party `http.Handler` implementations directly:
+
+```go:no-line-numbers
+f.Get("/files/*", http.StripPrefix("/files/", http.FileServer(http.Dir("./public"))))
+```
+:::
 
 ## Return values
 
