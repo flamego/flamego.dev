@@ -359,12 +359,14 @@ $ curl http://localhost:2830/geo/ma/boston/02125
 ::: tip 🆕 Available in v1.10.0
 :::
 
-A single route may contain more than one glob, as long as adjacent globs can be unambiguously partitioned. Two globs in the same route must be separated by either:
+A single route may contain more than one glob. Two globs in the same route must be separated by either:
 
-- a static or regex segment, which constrains the path text and so bounds where the earlier glob can grow, or
+- a static or regex segment, or
 - a capture limit on the earlier glob, which bounds how many segments it can consume.
 
-Placeholder segments (`{name}`) do **not** count as separators because they accept any one segment of any content, which would leave the split between the surrounding globs ambiguous.
+Static segments pin the path text exactly. Regex segments are accepted as separators regardless of how broadly the regex matches — a tight pattern like `/[0-9]+/` gives a real disambiguation point, while a permissive pattern like `/.+/` does not, but the regex is taken as your explicit opt-in to that route shape and the resulting bindings follow the normal [matching priority](#matching-priority).
+
+Placeholder segments (`{name}`) do **not** count as separators because they accept any one segment of any content with no opt-in, which would leave the split between the surrounding globs silently ambiguous.
 
 Below are valid multi-glob routes:
 
