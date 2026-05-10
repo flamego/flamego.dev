@@ -489,6 +489,31 @@ The `Headers` method accepts key-value pairs as the list of matching criteria fo
 
 When a route fails on matching request headers, the Flame instance continues to match other routes instead of halting the route matching process.
 
+## Matching custom predicates
+
+::: tip 🆕 Available in v1.11.0
+:::
+
+When path and `Headers` matching are not enough, you may attach an arbitrary predicate to a route with `Match`:
+
+```go:no-line-numbers
+f.Get("/admin", ...).Match(func(r *http.Request) bool {
+	return strings.HasPrefix(r.RemoteAddr, "10.")
+})
+```
+
+The `Match` method accepts a `func(*http.Request) bool`. The predicate is evaluated only after the request path (and any `Headers` matchers) match. If it returns false, the request falls through to the next candidate route just like a failed `Headers` match — it does not halt the route matching process.
+
+Multiple `Match` calls on the same route accumulate and are combined with AND: every predicate must return true for the route to match. When combined with `Headers`, both must pass:
+
+```go:no-line-numbers
+f.Get("/", ...).
+	Headers("Accept", "application/json").
+	Match(func(r *http.Request) bool { return r.TLS != nil })
+```
+
+The predicate does not affect the matching priority of the route, nor does it participate in `URLPath` construction. Passing a nil function to `Match` panics at registration.
+
 ## Matching priority
 
 When your web application grows large enough, you'll start to want to make sense of which route gets matched at when. This is where the matching priority comes into play.
