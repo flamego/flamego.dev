@@ -31,7 +31,7 @@ func main() {
 
 When a route is matched by a request, the Flame instance [queues a chain of handlers](https://github.com/flamego/flamego/blob/8709b65452b2f8513508500017c862533ca767ee/flame.go#L82-L84) (including middleware) to be invoked in the same order as they are registered.
 
-By default, the next handler will only be invoked after the previous one in the chain has finished. You may change this behvaior using the `Next` method, which allows you to pause the execution of the current handler and resume after the rest of the chain finished.
+By default, the next handler will only be invoked after the previous one in the chain has finished. You may change this behavior using the `Next` method, which allows you to pause the execution of the current handler and resume after the rest of the chain finished.
 
 ```go:no-line-numbers
 package main
@@ -197,7 +197,7 @@ There is a family of `Query` methods available at your fingertips, including:
 All of these methods accept an optional second argument as the default value when the parameter is absent.
 
 ::: tip
-If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middlware) for the URL parameters by accessing the underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
+If you are not happy with the functionality that is provided by the family of `Query` methods, it is always possible to build your own helpers (or middleware) for the URL parameters by accessing the underlying [`url.Values`](https://pkg.go.dev/net/url#Values) directly:
 
 ```go:no-line-numbers
 vals := c.Request().URL.Query()
@@ -208,7 +208,7 @@ vals := c.Request().URL.Query()
 
 No.
 
-The `flamego.Context` is a representation of the request context and should live within the routing layer, where the `context.Context` is a general purpose context and can be propogated to almost anywhere (e.g. database layer).
+The `flamego.Context` is a representation of the request context and should live within the routing layer, where the `context.Context` is a general purpose context and can be propagated to almost anywhere (e.g. database layer).
 
 You can retrieve the `context.Context` of a request using the following methods:
 

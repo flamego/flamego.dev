@@ -114,7 +114,7 @@ func main() {
 		return "The user is Joe"
 	})
 
-	// Pass on all routes under "/user/" to the Flame isntance
+	// Pass on all routes under "/user/" to the Flame instance
 	http.Handle("/user/", f)
 
 	if err := http.ListenAndServe("0.0.0.0:2830", nil); err != nil {
@@ -154,7 +154,7 @@ func main() {
 		return "The user is Joe"
 	})
 
-	// Pass on all routes under "/user/" to the Flame isntance
+	// Pass on all routes under "/user/" to the Flame instance
 	m := macaron.New()
 	m.Any("/user/*", f.ServeHTTP)
 
